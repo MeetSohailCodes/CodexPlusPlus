@@ -11,13 +11,13 @@ fn build_zed_remote_url_with_user_host_port_and_encoded_path() {
             host: "example.com".to_string(),
             port: Some(2222),
         },
-        "/home/alice/My Project/你好.py",
+        "/home/alice/My Project/hello.py",
     )
     .unwrap();
 
     assert_eq!(
         url,
-        "ssh://alice@example.com:2222/home/alice/My%20Project/%E4%BD%A0%E5%A5%BD.py"
+        "ssh://alice@example.com:2222/home/alice/My%20Project/hello.py"
     );
 }
 

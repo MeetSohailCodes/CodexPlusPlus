@@ -5,7 +5,7 @@
 </p>
 
 <p align="center">
-  <a href="README_EN.md">中文</a> | English
+  <a href="README_EN.md">Chinese</a> | English
 </p>
 
 <p align="center">
@@ -41,7 +41,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
   </a>
 </p>
 <p align="center">
-  <a href="https://jojocode.com/"><strong>JOJO Code｜Official Codex++ Relay</strong></a><br>
+  <a href="https://jojocode.com/"><strong>JOJO Code | Official Codex++ Relay</strong></a><br>
   The official Codex++ relay service, focused on stable access and cost-effective pricing. JOJO Code supports GPT-5.5, GPT-5.4, Claude Opus 4.8, Claude Opus 4.7, gpt-image-2, and more for daily development, team collaboration, and long-running project workflows.
 </p>
 
@@ -59,7 +59,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
         <img src="docs/images/sponsor-jojocode.svg" alt="JOJO Code" height="80">
       </a>
     </td>
-    <td><a href="https://jojocode.com/"><strong>JOJO Code｜Official Codex++ Relay</strong></a><br>Thanks to JOJO Code for sponsoring this project. JOJO Code is the official Codex++ relay service with cost-effective pricing and stable, easy-to-configure Codex API access. It supports GPT-5.5, GPT-5.4, Claude Opus 4.8, Claude Opus 4.7, gpt-image-2, and more for daily development, quick setup, team collaboration, and continuous use.</td>
+    <td><a href="https://jojocode.com/"><strong>JOJO Code | Official Codex++ Relay</strong></a><br>Thanks to JOJO Code for sponsoring this project. JOJO Code is the official Codex++ relay service with cost-effective pricing and stable, easy-to-configure Codex API access. It supports GPT-5.5, GPT-5.4, Claude Opus 4.8, Claude Opus 4.7, gpt-image-2, and more for daily development, quick setup, team collaboration, and continuous use.</td>
   </tr>
   <tr>
     <td align="center">
@@ -99,7 +99,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
         <img src="docs/images/sponsor-0029.svg" alt="0029 Cloud Bridge" height="80">
       </a>
     </td>
-    <td><a href="https://www.0029.org/?promo=AFF11F"><strong>0029 Cloud Bridge｜Codex API Relay Station (gpt5.5 gpt-image-2)</strong></a><br>Supports individual and enterprise access. Monthly plans and pay-as-you-go billing are available, with Pro/Plus account pools, stable site-wide APIs, and 24/7 technical support.</td>
+    <td><a href="https://www.0029.org/?promo=AFF11F"><strong>0029 Cloud Bridge | Codex API Relay Station (gpt5.5 gpt-image-2)</strong></a><br>Supports individual and enterprise access. Monthly plans and pay-as-you-go billing are available, with Pro/Plus account pools, stable site-wide APIs, and 24/7 technical support.</td>
   </tr>
   <tr>
     <td align="center">
@@ -327,7 +327,7 @@ When the installer is unsigned or unnotarized, macOS Gatekeeper may block it wit
 If you encounter this message, run the following two commands in the terminal to remove Apple's security quarantine:
 
 ```bash
-sudo xattr -rd com.apple.quarantine /Applications/Codex++\ 管理工具.app
+sudo xattr -rd com.apple.quarantine /Applications/Codex++\ Manager.app
 sudo xattr -rd com.apple.quarantine /Applications/Codex++.app
 ```
 

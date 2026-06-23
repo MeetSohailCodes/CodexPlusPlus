@@ -9,7 +9,7 @@ pub fn export_markdown_from_paths(
     session: &SessionRef,
 ) -> ExportResult {
     let thread_id = normalize_session_id(&session.session_id);
-    let mut result = failed(&thread_id, "未找到对应会话");
+    let mut result = failed(&thread_id, "No matching conversation found");
     let mut saw_candidate = false;
     for db_path in db_paths {
         if !db_path.exists() {
@@ -20,7 +20,7 @@ pub fn export_markdown_from_paths(
         if matches!(candidate.status, ExportStatus::Exported) {
             return candidate;
         }
-        if result.message == "未找到对应会话" || candidate.message != "未找到对应会话"
+        if result.message == "No matching conversation found" || candidate.message != "No matching conversation found"
         {
             result = candidate;
         }
@@ -28,7 +28,7 @@ pub fn export_markdown_from_paths(
     if saw_candidate {
         result
     } else {
-        failed(&thread_id, "未配置本地 Codex 数据库")
+        failed(&thread_id, "No local Codex database configured")
     }
 }
 
@@ -46,12 +46,12 @@ impl MarkdownExportService {
 
     pub fn export(&self, session: &SessionRef) -> ExportResult {
         let Some(db_path) = &self.db_path else {
-            return failed(&session.session_id, "未配置本地 Codex 数据库");
+            return failed(&session.session_id, "No local Codex database configured");
         };
         if !db_path.exists() {
             return failed(
                 &session.session_id,
-                format!("数据库不存在：{}", db_path.to_string_lossy()),
+                format!("Database does not exist: {}", db_path.to_string_lossy()),
             );
         }
         let thread_id = normalize_session_id(&session.session_id);
@@ -59,9 +59,9 @@ impl MarkdownExportService {
             let db = Connection::open(db_path)?;
             let record = match lookup_thread_record(&db, db_path, &thread_id)? {
                 ThreadLookup::Found(record) => record,
-                ThreadLookup::Missing => return Ok(failed(&thread_id, "未找到对应会话")),
+                ThreadLookup::Missing => return Ok(failed(&thread_id, "No matching conversation found")),
                 ThreadLookup::Unsupported => {
-                    return Ok(failed(&thread_id, "不支持当前本地存储结构"));
+                    return Ok(failed(&thread_id, "Unsupported local storage schema"));
                 }
             };
             let title = display_title(record.title.as_deref().unwrap_or(&session.title));
@@ -69,29 +69,29 @@ impl MarkdownExportService {
                 .rollout_path
                 .filter(|path| !path.as_os_str().is_empty())
             else {
-                return Ok(failed(&thread_id, "会话缺少 rollout 文件路径"));
+                return Ok(failed(&thread_id, "Conversation missing rollout file path"));
             };
             if !rollout_path.is_file() {
                 return Ok(failed(
                     &thread_id,
-                    format!("rollout 文件不存在：{}", rollout_path.to_string_lossy()),
+                    format!("Rollout file does not exist: {}", rollout_path.to_string_lossy()),
                 ));
             }
             let messages = load_messages(&rollout_path)?;
             if messages.is_empty() {
-                return Ok(failed(&thread_id, "未找到可导出的用户或助手消息"));
+                return Ok(failed(&thread_id, "No user or assistant messages to export"));
             }
             let filename = build_filename(&title, &thread_id);
             let markdown = render_markdown(&title, &messages);
             Ok(ExportResult {
                 status: ExportStatus::Exported,
                 session_id: thread_id.clone(),
-                message: format!("已导出为 Markdown：{filename}"),
+                message: format!("Exported as Markdown: {filename}"),
                 filename: Some(filename),
                 markdown: Some(markdown),
             })
         })();
-        result.unwrap_or_else(|err| failed(&thread_id, format!("读取 rollout 失败：{err}")))
+        result.unwrap_or_else(|err| failed(&thread_id, format!("Failed to read rollout: {err}")))
     }
 }
 

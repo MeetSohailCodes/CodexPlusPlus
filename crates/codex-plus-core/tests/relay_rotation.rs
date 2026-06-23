@@ -28,7 +28,7 @@ fn profile(id: &str) -> RelayProfile {
 fn aggregate(strategy: AggregateRelayStrategy) -> AggregateRelayProfile {
     AggregateRelayProfile {
         id: "agg".to_string(),
-        name: "聚合".to_string(),
+        name: "Aggregate".to_string(),
         strategy,
         members: vec![
             AggregateRelayMember {
@@ -50,7 +50,7 @@ fn aggregate(strategy: AggregateRelayStrategy) -> AggregateRelayProfile {
 fn aggregate_with_id(id: &str, strategy: AggregateRelayStrategy) -> AggregateRelayProfile {
     AggregateRelayProfile {
         id: id.to_string(),
-        name: "聚合".to_string(),
+        name: "Aggregate".to_string(),
         strategy,
         members: vec![
             AggregateRelayMember {
@@ -73,7 +73,7 @@ fn settings(strategy: AggregateRelayStrategy) -> BackendSettings {
             profile("relay-c"),
             RelayProfile {
                 id: "agg".to_string(),
-                name: "聚合".to_string(),
+                name: "Aggregate".to_string(),
                 relay_mode: RelayMode::Aggregate,
                 ..RelayProfile::default()
             },
@@ -212,7 +212,7 @@ fn aggregate_members_must_be_api_capable_relay_profiles() {
     let mut settings = settings(AggregateRelayStrategy::WeightedRoundRobin);
     settings.relay_profiles.push(RelayProfile {
         id: "official-login".to_string(),
-        name: "官方登录".to_string(),
+        name: "Official Login".to_string(),
         base_url: String::new(),
         api_key: String::new(),
         ..RelayProfile::default()
@@ -287,7 +287,7 @@ fn record_relay_request_failure_advances_global_failover_selector() {
             profile("relay-b"),
             RelayProfile {
                 id: aggregate_id.to_string(),
-                name: "聚合".to_string(),
+                name: "Aggregate".to_string(),
                 relay_mode: RelayMode::Aggregate,
                 ..RelayProfile::default()
             },
@@ -319,7 +319,7 @@ fn select_relay_for_probe_does_not_advance_request_rotation() {
             profile("relay-b"),
             RelayProfile {
                 id: aggregate_id.to_string(),
-                name: "聚合".to_string(),
+                name: "Aggregate".to_string(),
                 relay_mode: RelayMode::Aggregate,
                 ..RelayProfile::default()
             },
@@ -379,7 +379,7 @@ fn select_relay_for_request_rebuilds_selector_when_active_aggregate_changes() {
             profile("relay-b"),
             RelayProfile {
                 id: aggregate_id.to_string(),
-                name: "聚合".to_string(),
+                name: "Aggregate".to_string(),
                 relay_mode: RelayMode::Aggregate,
                 ..RelayProfile::default()
             },

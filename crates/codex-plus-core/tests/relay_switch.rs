@@ -121,7 +121,7 @@ fn switch_to_aggregate_relay_allows_empty_config_snapshot() {
     let api = pure_profile("api", "https://api.example/v1", "sk-api");
     let aggregate = RelayProfile {
         id: "agg".to_string(),
-        name: "聚合供应商 1".to_string(),
+        name: "Aggregate Provider 1".to_string(),
         relay_mode: RelayMode::Aggregate,
         config_contents: String::new(),
         auth_contents: String::new(),
@@ -138,7 +138,7 @@ fn switch_to_aggregate_relay_allows_empty_config_snapshot() {
         relay_profiles: vec![api, aggregate],
         aggregate_relay_profiles: vec![AggregateRelayProfile {
             id: "agg".to_string(),
-            name: "聚合供应商 1".to_string(),
+            name: "Aggregate Provider 1".to_string(),
             strategy: AggregateRelayStrategy::Failover,
             members: vec![AggregateRelayMember {
                 relay_id: "api".to_string(),
@@ -187,7 +187,7 @@ goals = true
     let store = SettingsStore::new(temp.path().join("settings.json"));
     let official = RelayProfile {
         id: "official".to_string(),
-        name: "官方".to_string(),
+        name: "Official".to_string(),
         relay_mode: RelayMode::Official,
         official_mix_api_key: false,
         auth_contents: r#"{"auth_mode":"chatgpt","tokens":{"access_token":"official"}}"#

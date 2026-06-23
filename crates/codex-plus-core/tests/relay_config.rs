@@ -270,7 +270,7 @@ fn apply_aggregate_relay_points_codex_to_local_responses_proxy_without_snapshot(
     let temp = tempfile::tempdir().unwrap();
     let profile = RelayProfile {
         id: "agg".to_string(),
-        name: "聚合供应商 1".to_string(),
+        name: "Aggregate Provider 1".to_string(),
         relay_mode: RelayMode::Aggregate,
         config_contents: String::new(),
         auth_contents: String::new(),
@@ -1115,7 +1115,7 @@ fn apply_relay_files_with_context_rejects_invalid_context_token_values() {
     )
     .unwrap_err();
 
-    assert!(error.to_string().contains("上下文大小"));
+    assert!(error.to_string().contains("Context size"));
 }
 
 #[test]

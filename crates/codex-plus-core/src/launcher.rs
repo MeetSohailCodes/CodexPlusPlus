@@ -891,7 +891,7 @@ async fn handle_helper_connection(
                 "200 OK".to_string(),
                 serde_json::to_vec(&serde_json::json!({
                     "status": "ok",
-                    "message": "后端已连接",
+                    "message": "Backend connected",
                     "version": crate::version::VERSION,
                     "transport": "http-helper"
                 }))?,
@@ -925,7 +925,7 @@ async fn handle_helper_connection(
                 "200 OK".to_string(),
                 serde_json::to_vec(&serde_json::json!({
                     "status": "ok",
-                    "message": "日志已记录"
+                    "message": "Log recorded"
                 }))?,
                 "application/json; charset=utf-8".to_string(),
                 "helper.diagnostics_log_ok",
@@ -946,7 +946,7 @@ async fn handle_helper_connection(
                 "404 Not Found".to_string(),
                 serde_json::to_vec(&serde_json::json!({
                     "status": "failed",
-                    "message": "未知后端路径"
+                    "message": "Unknown backend path"
                 }))?,
                 "application/json; charset=utf-8".to_string(),
                 "helper.unknown_path",
@@ -1462,7 +1462,7 @@ fn encrypt_mobile_relay_payload(cipher: &Aes256Gcm, payload: &Value) -> anyhow::
     let plaintext = serde_json::to_vec(payload)?;
     let ciphertext = cipher
         .encrypt(Nonce::from_slice(&nonce), plaintext.as_slice())
-        .map_err(|_| anyhow::anyhow!("手机控制数据加密失败"))?;
+        .map_err(|_| anyhow::anyhow!("Failed to encrypt mobile control data"))?;
     Ok(serde_json::json!({
         "type": "encrypted",
         "nonce": URL_SAFE_NO_PAD.encode(nonce),
@@ -1489,31 +1489,31 @@ fn decrypt_mobile_relay_request(cipher: &Aes256Gcm, envelope: &Value) -> anyhow:
         return envelope
             .get("payload")
             .cloned()
-            .ok_or_else(|| anyhow::anyhow!("手机控制明文数据包缺少 payload"));
+            .ok_or_else(|| anyhow::anyhow!("Mobile control plaintext packet is missing payload"));
     }
     decrypt_mobile_relay_envelope(cipher, envelope)
 }
 
 fn decrypt_mobile_relay_envelope(cipher: &Aes256Gcm, envelope: &Value) -> anyhow::Result<Value> {
     if envelope.get("type").and_then(Value::as_str) != Some("encrypted") {
-        anyhow::bail!("手机控制数据包未加密");
+        anyhow::bail!("Mobile control packet is not encrypted");
     }
     let nonce_text = envelope
         .get("nonce")
         .and_then(Value::as_str)
-        .ok_or_else(|| anyhow::anyhow!("手机控制数据包缺少 nonce"))?;
+        .ok_or_else(|| anyhow::anyhow!("Mobile control packet is missing nonce"))?;
     let payload_text = envelope
         .get("payload")
         .and_then(Value::as_str)
-        .ok_or_else(|| anyhow::anyhow!("手机控制数据包缺少 payload"))?;
+        .ok_or_else(|| anyhow::anyhow!("Mobile control packet is missing payload"))?;
     let nonce = URL_SAFE_NO_PAD.decode(nonce_text)?;
     if nonce.len() != 12 {
-        anyhow::bail!("手机控制 nonce 长度无效");
+        anyhow::bail!("Invalid mobile control nonce length");
     }
     let ciphertext = URL_SAFE_NO_PAD.decode(payload_text)?;
     let plaintext = cipher
         .decrypt(Nonce::from_slice(&nonce), ciphertext.as_slice())
-        .map_err(|_| anyhow::anyhow!("手机控制数据解密失败"))?;
+        .map_err(|_| anyhow::anyhow!("Failed to decrypt mobile control data"))?;
     Ok(serde_json::from_slice(&plaintext)?)
 }
 
@@ -1523,7 +1523,7 @@ fn overlay_image_response() -> (String, Vec<u8>, String, &'static str) {
             "404 Not Found".to_string(),
             serde_json::to_vec(&serde_json::json!({
                 "status": "failed",
-                "message": "图片覆盖层未启用或图片不可用"
+                "message": "Image overlay is disabled or the image is unavailable"
             }))
             .unwrap_or_default(),
             "application/json; charset=utf-8".to_string(),
@@ -1959,7 +1959,7 @@ async fn start_app_server_runtime() -> anyhow::Result<AppServerRuntime> {
     command.creation_flags(crate::windows_integration::CREATE_NO_WINDOW);
     let child = command
         .spawn()
-        .with_context(|| format!("无法启动 Codex app-server：{codex}"))?;
+        .with_context(|| format!("Unable to start Codex app-server: {codex}"))?;
     wait_for_app_server_ready(port).await?;
     Ok(AppServerRuntime {
         port,
@@ -1987,7 +1987,7 @@ fn reserve_app_server_port() -> anyhow::Result<u16> {
             return Ok(port);
         }
     }
-    anyhow::bail!("无法为 Codex app-server 预留端口")
+    anyhow::bail!("Unable to reserve a port for Codex app-server")
 }
 
 async fn wait_for_app_server_ready(port: u16) -> anyhow::Result<()> {
@@ -1997,7 +1997,7 @@ async fn wait_for_app_server_ready(port: u16) -> anyhow::Result<()> {
         }
         tokio::time::sleep(std::time::Duration::from_millis(100)).await;
     }
-    anyhow::bail!("Codex app-server 启动超时")
+    anyhow::bail!("Codex app-server startup timed out")
 }
 
 async fn app_server_ready(port: u16) -> bool {
@@ -2046,7 +2046,7 @@ fn mobile_model_catalog_value() -> Value {
 
 fn mobile_page_html(model_catalog_json: &str) -> String {
     let html = r#"<!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -2141,34 +2141,34 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
   <div class="app">
     <header class="topbar">
       <strong class="title">Codex++</strong>
-      <span id="status" class="status">正在连接 WebSocket...</span>
+      <span id="status" class="status">Connecting to WebSocket...</span>
     </header>
     <main class="layout">
       <section id="sessionsPane" class="sessions">
-        <div class="search"><input id="filter" placeholder="搜索会话" autocomplete="off" /></div>
+        <div class="search"><input id="filter" placeholder="Search sessions" autocomplete="off" /></div>
         <div id="sessions" class="list"></div>
       </section>
       <section id="detailPane" class="detail hidden">
         <div class="thread-head">
-          <button id="back" class="mobile-back">返回</button>
+          <button id="back" class="mobile-back">Back</button>
           <div>
-            <div id="threadTitle" class="thread-title">选择一个会话</div>
+            <div id="threadTitle" class="thread-title">Select a session</div>
             <div id="threadMeta" class="thread-meta"></div>
           </div>
           <div class="controls">
-            <label class="field">模型<select id="modelSelect"></select></label>
-            <label class="field">思考<select id="effortSelect">
-              <option value="">继承</option>
-              <option value="low">低</option>
-              <option value="medium">中</option>
-              <option value="high">高</option>
+            <label class="field">Model<select id="modelSelect"></select></label>
+            <label class="field">Reasoning<select id="effortSelect">
+              <option value="">Inherit</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
             </select></label>
           </div>
         </div>
-        <div id="messages" class="messages"><div class="empty">从左侧选择会话，或在项目目录里点 + 新建</div></div>
+        <div id="messages" class="messages"><div class="empty">Select a session from the left, or click + New in a project directory</div></div>
         <form id="composer" class="composer">
-          <textarea id="messageInput" placeholder="输入消息，新建会话会作为首条消息发送" rows="1"></textarea>
-          <button id="send" class="primary" type="submit">发送</button>
+          <textarea id="messageInput" placeholder="Enter a message; a new session will send it as the first message" rows="1"></textarea>
+          <button id="send" class="primary" type="submit">Send</button>
         </form>
       </section>
     </main>
@@ -2207,13 +2207,13 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
       socket.addEventListener("message", onSocketMessage);
       socket.addEventListener("close", () => {
         state.initialized = false;
-        for (const pending of state.pendingRpc.values()) pending.reject(new Error("连接已断开"));
+        for (const pending of state.pendingRpc.values()) pending.reject(new Error("Connection lost"));
         state.pendingRpc.clear();
       });
       try {
         await new Promise((resolve, reject) => {
           socket.addEventListener("open", resolve, { once: true });
-          socket.addEventListener("error", () => reject(new Error("WebSocket 连接失败")), { once: true });
+          socket.addEventListener("error", () => reject(new Error("WebSocket connection failed")), { once: true });
         });
         await rpcRaw("initialize", {
           clientInfo: { name: "Codex++ Mobile", version: "1.0.0" },
@@ -2237,7 +2237,7 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
         const pending = state.pendingRpc.get(String(message.id));
         if (!pending) return;
         state.pendingRpc.delete(String(message.id));
-        if (message.error) pending.reject(new Error(message.error.message || "请求失败"));
+        if (message.error) pending.reject(new Error(message.error.message || "Request failed"));
         else pending.resolve(message.result);
         return;
       }
@@ -2251,7 +2251,7 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
         const delta = extractDeltaText(params);
         if (delta) {
           appendAgentDelta(params, delta);
-          setStatus("正在接收回复...");
+          setStatus("Receiving reply...");
         }
         return;
       }
@@ -2259,18 +2259,18 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
       if (message.method === "turn/started") {
         state.streaming = null;
         appendThinkingNode();
-        setStatus("正在思考...");
+        setStatus("Thinking...");
         return;
       }
 
       if (message.method === "item/completed") {
         handleCompletedItem(params);
-        setStatus("收到完整消息");
+        setStatus("Received full message");
         return;
       }
 
       if (message.method === "turn/completed" || message.method === "thread/status/changed") {
-        setStatus(`收到更新：${message.method}`);
+        setStatus(`Received update: ${message.method}`);
       }
     }
 
@@ -2310,7 +2310,7 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
       const text = itemText(item);
       if (!text) return;
       const role = itemRole(item);
-      if (role === "用户") {
+      if (role === "User") {
         const confirmedUserTexts = new Map([[text, 1]]);
         reconcilePendingMessages(state.selectedId, confirmedUserTexts);
         confirmPendingMessageNode(text);
@@ -2335,13 +2335,13 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
 
     async function rpcRaw(method, params = {}) {
       const socket = state.socket;
-      if (!socket || socket.readyState !== WebSocket.OPEN) throw new Error("WebSocket 未连接");
+      if (!socket || socket.readyState !== WebSocket.OPEN) throw new Error("WebSocket not connected");
       const id = nextId++;
       const payload = { jsonrpc: "2.0", id, method, params };
       const promise = new Promise((resolve, reject) => {
         state.pendingRpc.set(String(id), { resolve, reject });
         setTimeout(() => {
-          if (state.pendingRpc.delete(String(id))) reject(new Error(`${method} 超时`));
+          if (state.pendingRpc.delete(String(id))) reject(new Error(`${method} timed out`));
         }, 60000);
       });
       socket.send(JSON.stringify(payload));
@@ -2377,7 +2377,7 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
       const result = await rpc("thread/start", params);
       const thread = result?.thread || result?.data || result;
       const threadId = thread?.id || result?.threadId || result?.id || "";
-      if (!threadId) throw new Error("新建会话失败：app-server 未返回 thread id");
+      if (!threadId) throw new Error("Failed to create session: app-server did not return a thread id");
       const item = {
         id: threadId,
         preview: thread?.preview || thread?.name || "",
@@ -2408,11 +2408,11 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
     }
 
     async function loadSessions() {
-      setStatus("正在加载会话...");
+      setStatus("Loading sessions...");
       const result = await rpc("thread/list", {});
       state.sessions = Array.isArray(result?.data) ? result.data : [];
       renderSessions();
-      setStatus(`已加载 ${state.sessions.length} 个会话`);
+      setStatus(`Loaded ${state.sessions.length} sessions`);
     }
 
     function visibleSessions() {
@@ -2430,7 +2430,7 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
     function renderSessions() {
       const items = visibleSessions();
       if (!items.length) {
-        sessionsEl.innerHTML = `<div class="empty">没有会话</div>`;
+        sessionsEl.innerHTML = `<div class="empty">No sessions</div>`;
         return;
       }
       sessionsEl.innerHTML = "";
@@ -2440,7 +2440,7 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
         section.className = "group" + (collapsed ? " collapsed" : "");
         const title = document.createElement("div");
         title.className = "group-title";
-        title.innerHTML = `<span class="chevron"></span><span class="group-name"></span><span class="group-count"></span><button class="group-new" type="button" title="新建会话">+</button>`;
+        title.innerHTML = `<span class="chevron"></span><span class="group-name"></span><span class="group-count"></span><button class="group-new" type="button" title="New session">+</button>`;
         title.querySelector(".chevron").textContent = collapsed ? ">" : "v";
         title.querySelector(".group-name").textContent = group.label;
         title.querySelector(".group-count").textContent = String(group.items.length);
@@ -2460,7 +2460,7 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
             <div class="meta"></div>
           `;
           button.querySelector(".preview").textContent = item.preview || item.name || item.id;
-          button.querySelector(".meta").textContent = `${formatTime(item.updatedAt || item.createdAt)} · ${item.modelProvider || "provider 未记录"}`;
+          button.querySelector(".meta").textContent = `${formatTime(item.updatedAt || item.createdAt)} · ${item.modelProvider || "provider not recorded"}`;
           button.addEventListener("click", () => selectThread(item.id));
           section.appendChild(button);
         }
@@ -2478,9 +2478,9 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
       state.selectedId = null;
       state.selectedCwd = String(cwd || "").trim();
       renderSessions();
-      titleEl.textContent = "新建会话";
-      metaEl.textContent = state.selectedCwd || "未知目录";
-      messagesEl.innerHTML = `<div class="empty">输入第一条消息后发送</div>`;
+      titleEl.textContent = "New session";
+      metaEl.textContent = state.selectedCwd || "Unknown directory";
+      messagesEl.innerHTML = `<div class="empty">Enter and send your first message</div>`;
       if (window.matchMedia("(max-width: 760px)").matches) {
         sessionsPane.classList.add("hidden");
         detailPane.classList.remove("hidden");
@@ -2510,7 +2510,7 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
 
     function projectLabel(cwd) {
       const value = String(cwd || "").trim();
-      if (!value) return "未知目录";
+      if (!value) return "Unknown directory";
       return value.split(/[\\\\/]/).filter(Boolean).pop() || value;
     }
 
@@ -2526,7 +2526,7 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
       titleEl.textContent = item?.preview || item?.name || threadId;
       metaEl.textContent = `${item?.modelProvider || ""} · ${item?.cwd || ""}`;
       syncControlsForThread(item);
-      messagesEl.innerHTML = `<div class="empty">正在通过 WebSocket 同步会话...</div>`;
+      messagesEl.innerHTML = `<div class="empty">Synchronizing session via WebSocket...</div>`;
       await refreshThread(threadId, item);
     }
 
@@ -2539,38 +2539,38 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
         const threadFromTurns = extractThread(turnsValue);
         const turns = extractTurns(turnsValue) || extractTurns(threadFromTurns);
         renderThread(threadFromTurns || item, normalizeTurns(turns), threadId);
-        setStatus("会话内容已加载");
+        setStatus("Session content loaded");
       } catch (error) {
         messagesEl.innerHTML = `<div class="empty error"></div>`;
-        messagesEl.querySelector(".error").textContent = `消息列表不可用：${error.message}`;
-        setStatus(`消息列表不可用：${error.message}`, true);
+        messagesEl.querySelector(".error").textContent = `Message list unavailable: ${error.message}`;
+        setStatus(`Message list unavailable: ${error.message}`, true);
       }
       try {
         const resumeValue = await resumePromise;
         const thread = extractThread(resumeValue);
         if (thread && threadId === state.selectedId) {
-          titleEl.textContent = thread.preview || thread.name || thread.id || "会话";
+          titleEl.textContent = thread.preview || thread.name || thread.id || "Session";
           metaEl.textContent = `${formatTime(thread.updatedAt || thread.createdAt)} · ${thread.cwd || ""}`;
         }
-        setStatus("会话已打开");
+        setStatus("Session opened");
       } catch (error) {
-        setStatus(`会话内容已加载，打开状态同步失败：${error.message}`, true);
+        setStatus(`Session content loaded, but failed to sync open state: ${error.message}`, true);
       }
     }
 
     function renderThread(thread, turns, threadId = state.selectedId) {
       if (thread) {
-        titleEl.textContent = thread.preview || thread.name || thread.id || "会话";
+        titleEl.textContent = thread.preview || thread.name || thread.id || "Session";
         metaEl.textContent = `${formatTime(thread.updatedAt || thread.createdAt)} · ${thread.cwd || ""}`;
       }
       const pending = pendingMessagesFor(threadId);
       if (!turns.length) {
         messagesEl.innerHTML = "";
         if (pending.length) {
-          for (const message of pending) appendMessageNode("用户", message.text, true);
+          for (const message of pending) appendMessageNode("User", message.text, true);
           messagesEl.scrollTop = messagesEl.scrollHeight;
         } else {
-          messagesEl.innerHTML = `<div class="empty">这个会话暂时没有可显示的消息</div>`;
+          messagesEl.innerHTML = `<div class="empty">This session currently has no visible messages</div>`;
         }
         return;
       }
@@ -2582,16 +2582,16 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
           const text = itemText(item);
           if (!text) continue;
           const role = itemRole(item);
-          if (role === "用户") {
+          if (role === "User") {
             confirmedUserTexts.set(text, (confirmedUserTexts.get(text) || 0) + 1);
           }
           appendMessageNode(role, text, false);
         }
       }
       reconcilePendingMessages(threadId, confirmedUserTexts);
-      for (const message of pendingMessagesFor(threadId)) appendMessageNode("用户", message.text, true);
+      for (const message of pendingMessagesFor(threadId)) appendMessageNode("User", message.text, true);
       if (!messagesEl.children.length) {
-        messagesEl.innerHTML = `<div class="empty">没有文本消息</div>`;
+        messagesEl.innerHTML = `<div class="empty">No text messages</div>`;
       }
       messagesEl.scrollTop = messagesEl.scrollHeight;
     }
@@ -2641,11 +2641,11 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
 
     function itemRole(item) {
       const raw = String(item?.role || item?.author?.role || item?.message?.role || item?.item?.role || item?.type || "").toLowerCase();
-      if (raw === "user" || raw === "usermessage" || raw === "input_text" || raw === "input") return "用户";
+      if (raw === "user" || raw === "usermessage" || raw === "input_text" || raw === "input") return "User";
       if (raw === "assistant" || raw === "agent" || raw === "codex" || raw === "agentmessage" || raw === "assistantmessage" || raw === "output_text" || raw === "output") return "Codex";
-      if (raw === "toolcall" || raw === "tool_call" || raw === "function_call") return "工具";
-      if (raw === "toolresult" || raw === "tool_result" || raw === "function_call_output") return "工具结果";
-      return item?.type || item?.role || "消息";
+      if (raw === "toolcall" || raw === "tool_call" || raw === "function_call") return "Tool";
+      if (raw === "toolresult" || raw === "tool_result" || raw === "function_call_output") return "Tool result";
+      return item?.type || item?.role || "Message";
     }
 
     function itemText(item) {
@@ -2667,7 +2667,7 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
     }
 
     function formatTime(value) {
-      if (!value) return "未知时间";
+      if (!value) return "Unknown time";
       const ms = value < 100000000000 ? value * 1000 : value;
       return new Date(ms).toLocaleString();
     }
@@ -2685,14 +2685,14 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
       if (!state.modelOptions.length && !state.selectedModel) {
         const option = document.createElement("option");
         option.value = "";
-        option.textContent = "继承当前配置";
+        option.textContent = "Inherit current configuration";
         modelSelect.appendChild(option);
         modelSelect.value = "";
         return;
       }
       const inherit = document.createElement("option");
       inherit.value = "";
-      inherit.textContent = "继承当前配置";
+      inherit.textContent = "Inherit current configuration";
       modelSelect.appendChild(inherit);
       for (const model of state.modelOptions) {
         const option = document.createElement("option");
@@ -2720,7 +2720,7 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
     function appendThinkingNode() {
       if (state.thinking?.isConnected) return state.thinking;
       if (messagesEl.querySelector(".empty")) messagesEl.innerHTML = "";
-      const node = appendMessageNode("Codex", "正在思考...", false);
+      const node = appendMessageNode("Codex", "Thinking...", false);
       node.dataset.thinking = "true";
       state.thinking = node;
       messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -2754,23 +2754,23 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
       const button = $("send");
       button.disabled = true;
       input.disabled = true;
-      setStatus("正在发送...");
+      setStatus("Sending...");
       let targetThreadId = state.selectedId;
       let isNewThread = false;
       try {
         if (!targetThreadId) {
-          if (!state.selectedCwd) throw new Error("请先选择会话，或在项目目录里点 + 新建");
-          setStatus("正在新建会话...");
+          if (!state.selectedCwd) throw new Error("Please select a session first, or click + New in a project directory");
+          setStatus("Creating new session...");
           const thread = await createThread(state.selectedCwd);
           targetThreadId = thread.id;
           isNewThread = true;
         }
         rememberPendingMessage(targetThreadId, text);
-        appendLocalMessage("用户", text, true);
+        appendLocalMessage("User", text, true);
         appendThinkingNode();
         await sendMessage(targetThreadId, text, { skipResume: isNewThread });
         input.value = "";
-        setStatus("已发送，正在思考...");
+        setStatus("Sent, thinking...");
       } catch (error) {
         forgetPendingMessage(targetThreadId, text);
         removePendingMessageNode(text);
@@ -2793,9 +2793,9 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
       const wrap = document.createElement("div");
       wrap.className = "turn";
       wrap.innerHTML = `<div class="role"></div><div class="bubble"></div>`;
-      wrap.querySelector(".role").textContent = pending ? `${role} · 待同步` : role;
+      wrap.querySelector(".role").textContent = pending ? `${role} · Pending sync` : role;
       const bubble = wrap.querySelector(".bubble");
-      bubble.classList.toggle("user", role === "用户");
+      bubble.classList.toggle("user", role === "User");
       bubble.textContent = text;
       messagesEl.appendChild(wrap);
       return wrap;
@@ -2805,8 +2805,8 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
       for (const node of messagesEl.querySelectorAll(".turn")) {
         const role = node.querySelector(".role");
         const bubble = node.querySelector(".bubble");
-        if (role?.textContent === "用户 · 待同步" && bubble?.textContent === text) {
-          role.textContent = "用户";
+        if (role?.textContent === "User · Pending sync" && bubble?.textContent === text) {
+          role.textContent = "User";
           return;
         }
       }
@@ -2816,7 +2816,7 @@ fn mobile_page_html(model_catalog_json: &str) -> String {
       for (const node of messagesEl.querySelectorAll(".turn")) {
         const role = node.querySelector(".role");
         const bubble = node.querySelector(".bubble");
-        if (role?.textContent === "用户 · 待同步" && bubble?.textContent === text) {
+        if (role?.textContent === "User · Pending sync" && bubble?.textContent === text) {
           node.remove();
           return;
         }
@@ -3305,13 +3305,13 @@ mod computer_use_tests {
     fn mobile_relay_host_url_appends_host_path_and_credentials() {
         let config = MobileRelayHostConfig {
             relay_url: "ws://example.test:57323".to_string(),
-            room: "项目 A".to_string(),
+            room: "Project A".to_string(),
             token: "a+b&c".to_string(),
             encryption_key: "test-key".to_string(),
         };
         assert_eq!(
             config.host_url(),
-            "ws://example.test:57323/host?room=%E9%A1%B9%E7%9B%AE%20A&token=a%2Bb%26c"
+            "ws://example.test:57323/host?room=Project%20A&token=a%2Bb%26c"
         );
     }
 
@@ -3345,7 +3345,7 @@ async fn read_http_request(stream: &mut tokio::net::TcpStream) -> anyhow::Result
             }
         }
         if buffer.len() > 32 * 1024 * 1024 {
-            anyhow::bail!("HTTP 请求过大");
+            anyhow::bail!("HTTP request too large");
         }
     }
 

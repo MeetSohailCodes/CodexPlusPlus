@@ -290,7 +290,7 @@ fn terminate_and_wait_for_exit(process_ids: Vec<u32>, timeout_ms: u64, interval_
 #[cfg(windows)]
 fn create_startup_shortcut(launcher_path: &Path, arguments: &str) -> anyhow::Result<()> {
     let Some(shortcut_path) = startup_shortcut_path() else {
-        anyhow::bail!("无法定位 Windows 启动目录")
+        anyhow::bail!("Cannot locate Windows startup directory")
     };
     crate::windows_integration::create_shortcut(&crate::windows_integration::ShortcutSpec {
         path: shortcut_path,

@@ -80,7 +80,7 @@ pub fn relay_profile_from_ccs(
             &format!("ccs-{}", sanitize_id(&provider.source_id)),
             existing_ids,
         ),
-        name: format!("{}（ccswitch）", strip_ccs_name_suffix(&provider.name)),
+        name: format!("{} (ccswitch)", strip_ccs_name_suffix(&provider.name)),
         model: String::new(),
         base_url: provider.base_url.clone(),
         upstream_base_url: provider.base_url.clone(),
@@ -291,7 +291,7 @@ fn ccs_import_key(name: &str, base_url: &str) -> String {
 
 fn strip_ccs_name_suffix(name: &str) -> &str {
     name.trim()
-        .strip_suffix("（ccswitch）")
+        .strip_suffix("(ccswitch)")
         .or_else(|| name.trim().strip_suffix("(ccswitch)"))
         .unwrap_or_else(|| name.trim())
 }

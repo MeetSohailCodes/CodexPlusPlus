@@ -34,7 +34,7 @@ pub fn run() {
             };
             let main_window =
                 tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App(url.into()))
-                    .title("Codex++ 管理工具")
+                    .title("Codex++ Manager")
                     .inner_size(1180.0, 820.0)
                     .min_inner_size(960.0, 720.0)
                     .build()?;
@@ -114,8 +114,8 @@ pub fn run() {
 }
 
 fn install_tray<R: tauri::Runtime>(app: &tauri::App<R>) -> tauri::Result<()> {
-    let show_item = MenuItem::with_id(app, TRAY_MENU_SHOW, "显示主窗口", true, None::<&str>)?;
-    let quit_item = MenuItem::with_id(app, TRAY_MENU_QUIT, "退出程序", true, None::<&str>)?;
+    let show_item = MenuItem::with_id(app, TRAY_MENU_SHOW, "Show Main Window", true, None::<&str>)?;
+    let quit_item = MenuItem::with_id(app, TRAY_MENU_QUIT, "Quit", true, None::<&str>)?;
     let tray_menu = Menu::with_items(app, &[&show_item, &quit_item])?;
 
     let mut tray_builder = TrayIconBuilder::new()
@@ -179,12 +179,12 @@ fn register_main_window_events<R: tauri::Runtime>(
             let window_for_decision = dialog_window.clone();
             dialog_app_handle
                 .dialog()
-                .message("要退出 Codex++ 管理工具，还是最小化到系统托盘？")
-                .title("关闭确认")
+                .message("Quit Codex++ Manager or minimize to system tray?")
+                .title("Close Confirmation")
                 .kind(MessageDialogKind::Info)
                 .buttons(MessageDialogButtons::OkCancelCustom(
-                    "退出程序".into(),
-                    "最小化到托盘".into(),
+                    "Quit".into(),
+                    "Minimize to Tray".into(),
                 ))
                 .show(move |should_exit| {
                     if should_exit {
@@ -214,7 +214,7 @@ fn install_panic_logger() {
             .downcast_ref::<&str>()
             .map(|message| (*message).to_string())
             .or_else(|| panic_info.payload().downcast_ref::<String>().cloned())
-            .unwrap_or_else(|| "非字符串 panic payload".to_string());
+            .unwrap_or_else(|| "Non-string panic payload".to_string());
         let location = panic_info.location().map(|location| {
             serde_json::json!({
                 "file": location.file(),

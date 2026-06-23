@@ -22,7 +22,7 @@ pub fn switch_relay_profile_in_home(
 ) -> anyhow::Result<RelaySwitchResult> {
     let mut selected_settings = next_settings;
     if !selected_settings.relay_profiles_enabled {
-        anyhow::bail!("供应商配置总开关已关闭，未写入 config.toml / auth.json。");
+        anyhow::bail!("Provider config master switch is off, did not write config.toml / auth.json.");
     }
 
     let original_settings = store.load().unwrap_or_default();
@@ -36,8 +36,8 @@ pub fn switch_relay_profile_in_home(
         launch_mode_for_relay_profile(&selected_settings.active_relay_profile());
     store
         .save(&selected_settings)
-        .context("保存供应商设置失败")?;
-    let selected_settings = store.load().context("读取供应商设置失败")?;
+        .context("Failed to save provider settings")?;
+    let selected_settings = store.load().context("Failed to read provider settings")?;
 
     match apply_selected_relay_profile(home, &selected_settings) {
         Ok(result) => Ok(result),
@@ -57,13 +57,13 @@ fn backfill_profile_before_switch(
         .relay_profiles
         .iter_mut()
         .find(|profile| profile.id == previous_active_relay_id)
-        .with_context(|| "当前供应商已不在配置列表中，已停止切换以避免覆盖用户改动。")?;
+        .with_context(|| "Current provider is no longer in the config list, switching stopped to avoid overwriting user changes.")?;
     backfill_relay_profile_from_home_with_common(
         home,
         profile,
         &mut settings.relay_context_config_contents,
     )
-    .with_context(|| "回填当前供应商配置失败")
+    .with_context(|| "Failed to backfill current provider config")
 }
 
 fn apply_selected_relay_profile(
@@ -92,7 +92,7 @@ fn apply_selected_relay_profile(
     let status = relay_config_status_from_home(home);
     if relay.relay_mode == RelayMode::PureApi && !status.configured {
         anyhow::bail!(
-            "纯 API 配置写入后未检测到完整 custom provider，请检查 config.toml 和供应商 API Key。"
+            "Pure API configuration written but complete custom provider not detected, please check config.toml and provider API Key."
         );
     }
     Ok(RelaySwitchResult {
@@ -105,7 +105,7 @@ fn apply_selected_relay_profile(
 fn validate_switch_profile_files(profile: &crate::settings::RelayProfile) -> anyhow::Result<()> {
     if profile.relay_mode != RelayMode::Aggregate && profile.config_contents.trim().is_empty() {
         anyhow::bail!(
-            "供应商「{}」缺少独立 config.toml，已停止切换，避免继续显示上一套配置文件。",
+            "Provider '{}' is missing an independent config.toml, switching stopped to avoid continuing to display the previous configuration file.",
             if profile.name.trim().is_empty() {
                 profile.id.as_str()
             } else {
@@ -126,7 +126,7 @@ fn validate_switch_profile_files(profile: &crate::settings::RelayProfile) -> any
             == Some(false)
     {
         anyhow::bail!(
-            "官方混合 API 不应在 auth.json 中保存 OPENAI_API_KEY。请清理此供应商的 auth.json 后再切换。"
+            "Official mixed API should not save OPENAI_API_KEY in auth.json. Please clean this provider's auth.json before switching."
         );
     }
     Ok(())

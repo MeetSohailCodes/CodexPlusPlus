@@ -1,6 +1,6 @@
-//! Codex Responses API 与 OpenAI Chat Completions 的本地协议转换。
+//! Local protocol conversion between Codex Responses API and OpenAI Chat Completions.
 //!
-//! Codex Chat 与 Responses 协议之间的转换实现。
+//! Conversion implementation between Codex Chat and Responses protocols.
 
 use std::collections::BTreeMap;
 use std::collections::BTreeSet;
@@ -342,8 +342,8 @@ pub async fn send_upstream_request_with_header_timeout(
 ) -> anyhow::Result<reqwest::Response> {
     tokio::time::timeout(timeout, request.send())
         .await
-        .with_context(|| format!("上游请求超过 {} 秒未返回响应头", timeout.as_secs()))?
-        .context("上游请求失败")
+        .with_context(|| format!("Upstream request did not return response headers within {} seconds", timeout.as_secs()))?
+        .context("Upstream request failed")
 }
 
 pub struct ChatSseToResponsesConverter {
@@ -568,7 +568,7 @@ async fn open_responses_proxy_request_with_settings_and_user_agent(
                 }
                 return Err(error).with_context(|| {
                     format!(
-                        "供应商「{}」请求上游失败，endpoint: {}",
+                        "Provider '{}' upstream request failed, endpoint: {}",
                         relay.name, endpoint
                     )
                 });
@@ -628,7 +628,7 @@ async fn open_responses_proxy_request_with_settings_and_user_agent(
             }),
         );
     }
-    anyhow::bail!("未找到可用的聚合供应商成员")
+    anyhow::bail!("No active aggregate provider member found")
 }
 
 pub async fn open_models_proxy_request(
@@ -681,13 +681,13 @@ pub async fn open_chat_completions_proxy_request(
     let settings = SettingsStore::default().load().unwrap_or_default();
     let relay = settings.active_relay_profile();
     if relay.protocol != RelayProtocol::ChatCompletions {
-        anyhow::bail!("当前中转未启用 Chat Completions 协议代理");
+        anyhow::bail!("Current relay does not have Chat Completions protocol proxy enabled");
     }
     if relay.base_url.trim().is_empty() {
-        anyhow::bail!("Chat Completions 上游 Base URL 不能为空");
+        anyhow::bail!("Chat Completions upstream Base URL cannot be empty");
     }
     if relay.api_key.trim().is_empty() {
-        anyhow::bail!("Chat Completions 上游 Key 不能为空");
+        anyhow::bail!("Chat Completions upstream Key cannot be empty");
     }
 
     let request_json: Value = serde_json::from_str(body)?;
@@ -769,10 +769,10 @@ fn upstream_request_builder(
 
 fn validate_upstream(relay: &crate::settings::RelayProfile) -> anyhow::Result<()> {
     if relay.base_url.trim().is_empty() {
-        anyhow::bail!("上游 Base URL 不能为空");
+        anyhow::bail!("Upstream Base URL cannot be empty");
     }
     if relay.api_key.trim().is_empty() {
-        anyhow::bail!("上游 Key 不能为空");
+        anyhow::bail!("Upstream Key cannot be empty");
     }
     Ok(())
 }

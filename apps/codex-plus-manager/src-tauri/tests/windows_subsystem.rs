@@ -104,7 +104,7 @@ fn macos_packager_hides_silent_launcher_but_not_manager() {
         "create_app \"Codex++\" \"CodexPlusPlus\" \"$BINARY_DIR/codex-plus-plus\" \"com.bigpizzav3.codexplusplus\" \"true\""
     ));
     assert!(script.contains(
-        "create_app \"Codex++ 管理工具\" \"CodexPlusPlusManager\" \"$BINARY_DIR/codex-plus-plus-manager\" \"com.bigpizzav3.codexplusplus.manager\" \"false\""
+        "create_app \"Codex++ Manager\" \"CodexPlusPlusManager\" \"$BINARY_DIR/codex-plus-plus-manager\" \"com.bigpizzav3.codexplusplus.manager\" \"false\""
     ));
 }
 
@@ -154,15 +154,15 @@ fn relay_settings_keeps_profile_config_and_auth_files_isolated() {
     assert!(app_tsx.contains("snapshotActiveRelayFilesBeforeSwitch"));
     assert!(app_tsx.contains("backfill_relay_profile_from_live"));
     assert!(app_tsx.contains("relayProfileSwitchValidation(selectedBeforeSave)"));
-    assert!(app_tsx.contains("缺少独立 config.toml"));
+    assert!(app_tsx.contains("Missing standalone config.toml"));
     assert!(app_tsx.contains("const command = relayProfileSwitchCommand(selectedAfterSave)"));
     assert!(app_tsx.contains("function relayProfileSwitchCommand"));
     assert!(app_tsx.contains("return \"apply_pure_api_injection\""));
     assert!(app_tsx.contains("return \"apply_relay_injection\""));
     assert!(app_tsx.contains("const createNewAggregateProfile = () =>"));
     assert!(app_tsx.contains("onClick={createNewAggregateProfile}"));
-    assert!(app_tsx.contains("已打开聚合供应商详情"));
-    assert!(!commands_rs.contains("缺少独立 auth.json"));
+    assert!(app_tsx.contains("Opened aggregate provider details"));
+    assert!(!commands_rs.contains("Missing standalone auth.json"));
     assert!(commands_rs.contains("backfill_relay_profile_from_live"));
     assert!(commands_rs.contains("apply_relay_profile_to_home_with_switch_rules"));
 }
@@ -175,12 +175,12 @@ fn relay_context_management_is_global_not_supplier_scoped() {
     let styles = manifest_dir.parent().unwrap().join("src/styles.css");
     let styles = std::fs::read_to_string(&styles).expect("read manager styles.css");
 
-    assert!(app_tsx.contains("作为全局配置独立管理"));
-    assert!(app_tsx.contains("label: \"工具与插件\""));
-    assert!(app_tsx.contains("title=\"Codex 工具与插件\""));
-    assert!(!app_tsx.contains("label: \"上下文配置\""));
-    assert!(!app_tsx.contains("title=\"上下文配置\""));
-    assert!(!app_tsx.contains("<strong>Codex 上下文</strong>"));
+    assert!(app_tsx.contains("Managed independently as global configuration"));
+    assert!(app_tsx.contains("label: \"Tools and Plugins\""));
+    assert!(app_tsx.contains("title=\"Codex Tools and Plugins\""));
+    assert!(!app_tsx.contains("label: \"Context Configuration\""));
+    assert!(!app_tsx.contains("title=\"Context Configuration\""));
+    assert!(!app_tsx.contains("<strong>Codex Context</strong>"));
     assert!(app_tsx.contains("id: \"context\""));
     assert!(app_tsx.contains("function ContextScreen"));
     assert!(app_tsx.contains("route === \"context\""));
@@ -197,11 +197,11 @@ fn relay_context_management_is_global_not_supplier_scoped() {
     assert!(app_tsx.contains("mergeLiveContextEntries"));
     assert!(app_tsx.contains("withLiveEntryState"));
     assert!(app_tsx.contains("contextEnabledSwitch"));
-    assert!(!app_tsx.contains("entry.enabled ? \"已启用\" : \"已禁用\""));
-    assert!(!app_tsx.contains("空配置体"));
+    assert!(!app_tsx.contains("entry.enabled ? \"Enabled\" : \"Disabled\""));
+    assert!(!app_tsx.contains("empty configuration body"));
     assert!(app_tsx.contains("relay-context-delete"));
-    assert!(!app_tsx.contains("切换供应商时只合并勾选项"));
-    assert!(!app_tsx.contains("未勾选的条目不会写入"));
+    assert!(!app_tsx.contains("When switching providers, only merge selected items"));
+    assert!(!app_tsx.contains("Unchecked items are not written"));
     assert!(!app_tsx.contains("className=\"context-switch\""));
     assert!(!styles.contains(".context-switch {"));
     assert!(styles.contains(".context-enabled-switch"));
@@ -224,7 +224,7 @@ fn manager_window_and_relay_detail_header_stay_usable() {
         std::fs::read_to_string(manifest_dir.join("tauri.conf.json")).expect("read tauri config");
 
     assert!(app_tsx.contains("relay-detail-sticky"));
-    assert!(!app_tsx.contains("CardHead title=\"供应商详情\""));
+    assert!(!app_tsx.contains("CardHead title=\"Provider Details\""));
     assert!(styles.contains(".relay-detail-sticky"));
     assert!(styles.contains("position: sticky"));
     assert!(styles.contains("top: 0"));

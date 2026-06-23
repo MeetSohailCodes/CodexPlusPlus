@@ -552,7 +552,7 @@ async fn relay_status(state: &Arc<Mutex<RelayState>>) -> RelayStatus {
 
 fn relay_test_page() -> String {
     r#"<!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -580,32 +580,32 @@ fn relay_test_page() -> String {
   <h1>Codex++ Mobile Relay</h1>
   <section>
     <div class="row">
-      <label>角色
+      <label>Role
         <select id="role">
           <option value="client">client</option>
           <option value="host">host</option>
         </select>
       </label>
-      <label>房间
+      <label>Room
         <input id="room" value="test">
       </label>
-      <label>令牌
+      <label>Token
         <input id="token" value="123456">
       </label>
     </div>
     <div class="actions">
-      <button id="connect">连接</button>
-      <button id="disconnect" class="secondary">断开</button>
+      <button id="connect">Connect</button>
+      <button id="disconnect" class="secondary">Disconnect</button>
     </div>
   </section>
   <section>
-    <label>发送内容
+    <label>Message
       <textarea id="message">hello</textarea>
     </label>
     <div class="actions">
-      <button id="send">发送</button>
-      <button id="status" class="secondary">请求 /backend/status</button>
-      <button id="clear" class="secondary">清空日志</button>
+      <button id="send">Send</button>
+      <button id="status" class="secondary">Request /backend/status</button>
+      <button id="clear" class="secondary">Clear Log</button>
     </div>
   </section>
   <section>
@@ -630,25 +630,25 @@ $("connect").onclick = () => {
   const token = encodeURIComponent($("token").value);
   const path = role === "host" ? "host" : "client";
   socket = new WebSocket(`${wsBase()}/${path}?room=${room}&token=${token}`);
-  socket.onopen = () => log("已连接");
-  socket.onclose = () => log("已断开");
-  socket.onerror = () => log("连接错误");
-  socket.onmessage = (event) => log(`收到: ${event.data}`);
+  socket.onopen = () => log("Connected");
+  socket.onclose = () => log("Disconnected");
+  socket.onerror = () => log("Connection Error");
+  socket.onmessage = (event) => log(`Received: ${event.data}`);
 };
 $("disconnect").onclick = () => {
   if (socket) socket.close();
 };
 $("send").onclick = () => {
   if (!socket || socket.readyState !== WebSocket.OPEN) {
-    log("未连接");
+    log("Not connected");
     return;
   }
   socket.send($("message").value);
-  log(`已发送: ${$("message").value}`);
+  log(`Sent: ${$("message").value}`);
 };
 $("status").onclick = () => {
   if (!socket || socket.readyState !== WebSocket.OPEN) {
-    log("未连接");
+    log("Not connected");
     return;
   }
   const request = {
@@ -660,7 +660,7 @@ $("status").onclick = () => {
     body: ""
   };
   socket.send(JSON.stringify(request));
-  log(`已请求: ${request.path}`);
+  log(`Requested: ${request.path}`);
 };
 $("clear").onclick = () => {
   $("log").textContent = "";
@@ -673,11 +673,11 @@ $("clear").onclick = () => {
 
 fn mobile_relay_page() -> String {
     r#"<!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>Codex++ 手机控制</title>
+  <title>Codex++ Mobile Control</title>
   <style>
     * { box-sizing: border-box; }
     :root { --bg: #f6f7f8; --panel: #fff; --line: #d8dde3; --text: #101418; --muted: #69727d; --accent: #0f766e; --danger: #b42318; --bubble-user: #e7f4f1; --bubble-agent: #fff; }
@@ -734,29 +734,29 @@ fn mobile_relay_page() -> String {
 </head>
 <body>
 <div class="app">
-  <header class="topbar"><strong class="title">Codex++</strong><span id="status" class="status">待连接</span></header>
+  <header class="topbar"><strong class="title">Codex++</strong><span id="status" class="status">Waiting for connection</span></header>
   <main class="layout">
     <section id="sessionsPane" class="sessions">
       <div class="connect">
         <div class="connect-row">
-          <input id="room" placeholder="房间 ID" autocomplete="off">
+          <input id="room" placeholder="Room ID" autocomplete="off">
           <input id="key" placeholder="Key" type="password" autocomplete="off">
-          <button id="connect" class="primary">连接</button>
+          <button id="connect" class="primary">Connect</button>
         </div>
       </div>
-      <div class="search"><input id="filter" placeholder="搜索会话" autocomplete="off"></div>
-      <div id="sessions" class="list"><div class="empty">连接后读取会话</div></div>
+      <div class="search"><input id="filter" placeholder="Search conversations" autocomplete="off"></div>
+      <div id="sessions" class="list"><div class="empty">Load conversations after connecting</div></div>
     </section>
     <section id="detailPane" class="detail hidden">
       <div class="thread-head">
-        <button id="back" class="mobile-back">返回</button>
-        <div id="threadTitle" class="thread-title">选择一个会话</div>
+        <button id="back" class="mobile-back">Back</button>
+        <div id="threadTitle" class="thread-title">Select a conversation</div>
         <div id="threadMeta" class="thread-meta"></div>
       </div>
-      <div id="messages" class="messages"><div class="empty">从左侧选择会话，或在项目目录里点 + 新建</div></div>
+      <div id="messages" class="messages"><div class="empty">Select from left or click + in project directory</div></div>
       <form id="composer" class="composer">
-        <textarea id="messageInput" placeholder="输入消息" rows="1"></textarea>
-        <button id="send" class="primary" type="submit">发送</button>
+        <textarea id="messageInput" placeholder="Type a message" rows="1"></textarea>
+        <button id="send" class="primary" type="submit">Send</button>
       </form>
     </section>
   </main>
@@ -789,14 +789,14 @@ function b64urlDecode(text) {
   return Uint8Array.from(atob(padded), ch => ch.charCodeAt(0));
 }
 async function cryptoKey() {
-  if (!crypto?.subtle) throw new Error("当前页面不是安全上下文，WebCrypto 不可用");
+  if (!crypto?.subtle) throw new Error("Current page is not a secure context, WebCrypto unavailable");
   const raw = new TextEncoder().encode($("key").value);
   const digest = await crypto.subtle.digest("SHA-256", raw);
   return crypto.subtle.importKey("raw", digest, "AES-GCM", false, ["encrypt", "decrypt"]);
 }
 async function encrypt(payload) {
   if (!crypto?.subtle) {
-    setStatus("当前浏览器禁用 WebCrypto，已使用兼容模式", true);
+    setStatus("WebCrypto disabled in this browser, using compatibility mode", true);
     return { type: "plaintext", payload };
   }
   const key = await cryptoKey();
@@ -807,7 +807,7 @@ async function encrypt(payload) {
 }
 async function decrypt(envelope) {
   if (envelope?.type === "plaintext") return envelope.payload;
-  if (!envelope || envelope.type !== "encrypted") throw new Error("收到未加密数据包");
+  if (!envelope || envelope.type !== "encrypted") throw new Error("Received unencrypted packet");
   const key = await cryptoKey();
   const nonce = b64urlDecode(envelope.nonce);
   const data = b64urlDecode(envelope.payload);
@@ -816,13 +816,13 @@ async function decrypt(envelope) {
 }
 async function connect() {
   const room = encodeURIComponent($("room").value.trim());
-  if (!room || !$("key").value) { setStatus("需要房间 ID 和 Key", true); return; }
+  if (!room || !$("key").value) { setStatus("Room ID and Key required", true); return; }
   const scheme = location.protocol === "https:" ? "wss" : "ws";
   if (socket) try { socket.close(); } catch {}
   socket = new WebSocket(`${scheme}://${location.host}/client?room=${room}&token=${room}`);
-  socket.onopen = async () => { setStatus("已连接 relay，正在读取会话..."); try { await loadSessions(); } catch (e) { setStatus(e.message, true); } };
-  socket.onclose = () => { appServerConnected = false; setStatus("已断开"); };
-  socket.onerror = () => setStatus("连接错误", true);
+  socket.onopen = async () => { setStatus("Connected to relay, loading conversations..."); try { await loadSessions(); } catch (e) { setStatus(e.message, true); } };
+  socket.onclose = () => { appServerConnected = false; setStatus("Disconnected"); };
+  socket.onerror = () => setStatus("Connection Error", true);
   socket.onmessage = async (event) => {
     try {
       const message = JSON.parse(event.data);
@@ -841,27 +841,27 @@ async function connect() {
       }
       if (response.type === "appServerClosed") {
         appServerConnected = false;
-        for (const item of pendingRpc.values()) item.reject(new Error(response.error || "app-server 连接已关闭"));
+        for (const item of pendingRpc.values()) item.reject(new Error(response.error || "app-server connection closed"));
         pendingRpc.clear();
-        setStatus(response.error || "app-server 连接已关闭", !!response.error);
+        setStatus(response.error || "app-server connection closed", !!response.error);
         return;
       }
       const id = String(response.id ?? "");
       const resolver = pending.get(id);
       if (resolver) { pending.delete(id); resolver.resolve(response); return; }
     } catch (error) {
-      setStatus(`解密/解析失败：${error.message}`, true);
+      setStatus(`Decrypt/parse failed: ${error.message}`, true);
     }
   };
 }
 async function request(path, body = "", timeoutMs = 30000) {
-  if (!socket || socket.readyState !== WebSocket.OPEN) throw new Error("未连接");
+  if (!socket || socket.readyState !== WebSocket.OPEN) throw new Error("Not connected");
   const id = `${Date.now()}-${requestId++}`;
   const packet = await encrypt({ type: "httpRequest", id, method: body ? "POST" : "GET", path, headers: {}, body });
   socket.send(JSON.stringify(packet));
   return await new Promise((resolve, reject) => {
     pending.set(id, { resolve, reject });
-    setTimeout(() => { if (pending.delete(id)) reject(new Error("请求超时")); }, timeoutMs);
+    setTimeout(() => { if (pending.delete(id)) reject(new Error("Request timeout")); }, timeoutMs);
   });
 }
 async function ensureAppServer() {
@@ -872,7 +872,7 @@ async function ensureAppServer() {
   socket.send(JSON.stringify(packet));
   await new Promise((resolve, reject) => {
     pending.set(id, { resolve, reject });
-    setTimeout(() => { if (pending.delete(id)) reject(new Error("app-server 连接超时")); }, 30000);
+    setTimeout(() => { if (pending.delete(id)) reject(new Error("app-server connection timeout")); }, 30000);
   });
   await rpcRaw("initialize", { clientInfo: { name: "Codex++ Mobile Relay", version: "1.0.0" }, capabilities: { experimentalApi: true } });
 }
@@ -881,14 +881,14 @@ async function rpc(method, params = {}) {
   return await rpcRaw(method, params);
 }
 async function rpcRaw(method, params = {}) {
-  if (!socket || socket.readyState !== WebSocket.OPEN) throw new Error("未连接");
-  if (!appServerSessionId) throw new Error("app-server 未连接");
+  if (!socket || socket.readyState !== WebSocket.OPEN) throw new Error("Not connected");
+  if (!appServerSessionId) throw new Error("app-server not connected");
   const id = rpcId++;
   const payload = { jsonrpc: "2.0", id, method, params };
   const packet = await encrypt({ type: "appServerMessage", sessionId: appServerSessionId, message: JSON.stringify(payload) });
   const promise = new Promise((resolve, reject) => {
     pendingRpc.set(String(id), { resolve, reject });
-    setTimeout(() => { if (pendingRpc.delete(String(id))) reject(new Error(`${method} 超时`)); }, method === "turn/start" ? 60000 : 30000);
+    setTimeout(() => { if (pendingRpc.delete(String(id))) reject(new Error(`${method} timeout`)); }, method === "turn/start" ? 60000 : 30000);
   });
   socket.send(JSON.stringify(packet));
   return promise;
@@ -900,7 +900,7 @@ function handleAppServerMessage(text) {
     const resolver = pendingRpc.get(String(message.id));
     if (!resolver) return;
     pendingRpc.delete(String(message.id));
-    if (message.error) resolver.reject(new Error(message.error.message || "请求失败"));
+    if (message.error) resolver.reject(new Error(message.error.message || "Request failed"));
     else resolver.resolve(message.result);
     return;
   }
@@ -910,13 +910,13 @@ function handleAppServerMessage(text) {
   if (threadId && threadId !== state.selectedId) return;
   if (message.method === "item/agentMessage/delta") {
     const delta = extractDeltaText(params);
-    if (delta) { appendAgentDelta(params, delta); setStatus("正在接收回复..."); }
+    if (delta) { appendAgentDelta(params, delta); setStatus("Receiving reply..."); }
     return;
   }
   if (message.method === "turn/started") {
     state.streaming = null;
     appendThinkingNode();
-    setStatus("正在思考...");
+    setStatus("Thinking...");
     return;
   }
   if (message.method === "item/completed") {
@@ -925,8 +925,8 @@ function handleAppServerMessage(text) {
   }
   if (message.method === "turn/completed" || message.method === "thread/status/changed") {
     clearThinkingNode();
-    setStatus("回复完成，正在同步...");
-    refreshThread(state.selectedId).catch((error) => setStatus(`同步失败：${error.message}`, true));
+    setStatus("Reply complete, syncing...");
+    refreshThread(state.selectedId).catch((error) => setStatus(`Sync failed: ${error.message}`, true));
   }
 }
 function eventThreadId(params) { return params.threadId || params.thread_id || params.thread?.id || params.turn?.threadId || params.turn?.thread_id || params.item?.threadId || params.item?.thread_id || ""; }
@@ -956,7 +956,7 @@ function handleCompletedItem(params) {
   const text = itemText(item);
   if (!text) return;
   const role = itemRole(item);
-  if (role === "用户") {
+  if (role === "User") {
     reconcilePendingMessages(state.selectedId, new Map([[text, 1]]));
     confirmPendingMessageNode(text);
     return;
@@ -972,11 +972,11 @@ function handleCompletedItem(params) {
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 async function loadSessions() {
-  setStatus("正在读取会话...");
+  setStatus("Loading conversations...");
   const result = await rpc("thread/list", {});
   state.sessions = Array.isArray(result?.data) ? result.data : [];
   renderSessions();
-  setStatus(`已加载 ${state.sessions.length} 个会话`);
+  setStatus(`Loaded ${state.sessions.length} conversations`);
 }
 function visibleSessions() {
   const filter = state.filter.trim().toLowerCase();
@@ -985,7 +985,7 @@ function visibleSessions() {
 }
 function renderSessions() {
   const items = visibleSessions();
-  if (!items.length) { sessionsEl.innerHTML = `<div class="empty">没有会话</div>`; return; }
+  if (!items.length) { sessionsEl.innerHTML = `<div class="empty">No conversations</div>`; return; }
   sessionsEl.innerHTML = "";
   for (const group of groupSessionsByProject(items)) {
     const section = document.createElement("div");
@@ -1005,7 +1005,7 @@ function renderSessions() {
       button.type = "button";
       button.innerHTML = `<div class="preview"></div><div class="meta"></div>`;
       button.querySelector(".preview").textContent = item.preview || item.name || item.id;
-      button.querySelector(".meta").textContent = `${formatTime(item.updatedAt || item.createdAt)} · ${item.modelProvider || "provider 未记录"}`;
+      button.querySelector(".meta").textContent = `${formatTime(item.updatedAt || item.createdAt)} · ${item.modelProvider || "provider not recorded"}`;
       button.onclick = () => selectThread(item.id);
       section.appendChild(button);
     }
@@ -1024,12 +1024,12 @@ function groupSessionsByProject(items) {
 }
 function projectLabel(cwd) {
   const value = String(cwd || "").trim();
-  if (!value) return "未知目录";
+  if (!value) return "Unknown directory";
   return value.split(/[\\/]/).filter(Boolean).pop() || value;
 }
 function newThreadInProject(cwd) {
   state.selectedId = null; state.selectedCwd = String(cwd || "").trim(); renderSessions();
-  titleEl.textContent = "新建会话"; metaEl.textContent = state.selectedCwd || "未知目录"; messagesEl.innerHTML = `<div class="empty">输入第一条消息后发送</div>`;
+  titleEl.textContent = "New conversation"; metaEl.textContent = state.selectedCwd || "Unknown directory"; messagesEl.innerHTML = `<div class="empty">Send after typing the first message</div>`;
   if (matchMedia("(max-width: 760px)").matches) { sessionsPane.classList.add("hidden"); detailPane.classList.remove("hidden"); }
   $("messageInput").focus();
 }
@@ -1038,7 +1038,7 @@ async function selectThread(threadId) {
   if (matchMedia("(max-width: 760px)").matches) { sessionsPane.classList.add("hidden"); detailPane.classList.remove("hidden"); }
   const item = state.sessions.find((entry) => entry.id === threadId);
   titleEl.textContent = item?.preview || item?.name || threadId; metaEl.textContent = `${item?.modelProvider || ""} · ${item?.cwd || ""}`;
-  messagesEl.innerHTML = `<div class="empty">正在同步会话...</div>`;
+  messagesEl.innerHTML = `<div class="empty">Syncing conversation...</div>`;
   await refreshThread(threadId, item);
 }
 async function refreshThread(threadId, fallbackItem = null) {
@@ -1050,26 +1050,26 @@ async function refreshThread(threadId, fallbackItem = null) {
     const threadFromTurns = extractThread(turnsValue);
     const turns = extractTurns(turnsValue) || extractTurns(threadFromTurns);
     renderThread(threadFromTurns || item, normalizeTurns(turns), threadId);
-    setStatus("会话内容已加载");
+    setStatus("Conversation loaded");
   } catch (error) {
     messagesEl.innerHTML = `<div class="empty error"></div>`;
-    messagesEl.querySelector(".error").textContent = `消息列表不可用：${error.message}`;
-    setStatus(`消息列表不可用：${error.message}`, true);
+    messagesEl.querySelector(".error").textContent = `Message list unavailable: ${error.message}`;
+    setStatus(`Message list unavailable: ${error.message}`, true);
   }
   try {
     const resumeValue = await resumePromise;
     const thread = extractThread(resumeValue);
     if (thread && threadId === state.selectedId) {
-      titleEl.textContent = thread.preview || thread.name || thread.id || "会话";
+      titleEl.textContent = thread.preview || thread.name || thread.id || "Conversation";
       metaEl.textContent = `${formatTime(thread.updatedAt || thread.createdAt)} · ${thread.cwd || ""}`;
     }
-    setStatus("会话已打开");
+    setStatus("Conversation opened");
   } catch (error) {
-    setStatus(`会话内容已加载，打开状态同步失败：${error.message}`, true);
+    setStatus(`Conversation loaded, failed to sync open state: ${error.message}`, true);
   }
 }
 function renderThread(thread, turns, threadId = state.selectedId) {
-  if (thread) { titleEl.textContent = thread.preview || thread.name || thread.id || "会话"; metaEl.textContent = `${formatTime(thread.updatedAt || thread.createdAt)} · ${thread.cwd || ""}`; }
+  if (thread) { titleEl.textContent = thread.preview || thread.name || thread.id || "Conversation"; metaEl.textContent = `${formatTime(thread.updatedAt || thread.createdAt)} · ${thread.cwd || ""}`; }
   messagesEl.innerHTML = "";
   const confirmedUserTexts = new Map();
   for (const turn of turns) {
@@ -1078,13 +1078,13 @@ function renderThread(thread, turns, threadId = state.selectedId) {
       const text = itemText(item);
       if (!text) continue;
       const role = itemRole(item);
-      if (role === "用户") confirmedUserTexts.set(text, (confirmedUserTexts.get(text) || 0) + 1);
+      if (role === "User") confirmedUserTexts.set(text, (confirmedUserTexts.get(text) || 0) + 1);
       appendMessageNode(role, text);
     }
   }
   reconcilePendingMessages(threadId, confirmedUserTexts);
-  for (const message of pendingMessagesFor(threadId)) appendMessageNode("用户", message.text, true);
-  if (!messagesEl.children.length) messagesEl.innerHTML = `<div class="empty">没有文本消息</div>`;
+  for (const message of pendingMessagesFor(threadId)) appendMessageNode("User", message.text, true);
+  if (!messagesEl.children.length) messagesEl.innerHTML = `<div class="empty">No text messages</div>`;
   messagesEl.scrollTop = messagesEl.scrollHeight;
 }
 function turnItems(turn) {
@@ -1122,8 +1122,8 @@ function appendMessageNode(role, text, pending = false) {
   const wrap = document.createElement("div");
   wrap.className = "turn";
   wrap.innerHTML = `<div class="role"></div><div class="bubble"></div>`;
-  wrap.querySelector(".role").textContent = pending ? `${role} · 待同步` : role;
-  wrap.querySelector(".bubble").classList.toggle("user", role === "用户");
+  wrap.querySelector(".role").textContent = pending ? `${role} · Pending sync` : role;
+  wrap.querySelector(".bubble").classList.toggle("user", role === "User");
   wrap.querySelector(".bubble").textContent = text;
   messagesEl.appendChild(wrap);
   return wrap;
@@ -1132,15 +1132,15 @@ function confirmPendingMessageNode(text) {
   for (const node of messagesEl.querySelectorAll(".turn")) {
     const role = node.querySelector(".role");
     const bubble = node.querySelector(".bubble");
-    if (role?.textContent === "用户 · 待同步" && bubble?.textContent === text) {
-      role.textContent = "用户";
+    if (role?.textContent === "User · Pending sync" && bubble?.textContent === text) {
+      role.textContent = "User";
       return;
     }
   }
 }
 function appendThinkingNode() {
   if (state.thinking?.isConnected) return state.thinking;
-  const node = appendMessageNode("Codex", "正在思考...");
+  const node = appendMessageNode("Codex", "Thinking...");
   node.dataset.thinking = "true";
   state.thinking = node;
   messagesEl.scrollTop = messagesEl.scrollHeight;
@@ -1188,7 +1188,7 @@ function pollThread(threadId, attempt = 0) {
   }
   if (attempt > 60) {
     state.pollTimers.delete(threadId);
-    setStatus("已发送，回复可能仍在生成，稍后可重新打开会话同步");
+    setStatus("Sent, reply may still be generating, reopen later to sync");
     return;
   }
   const delay = attempt < 8 ? 1200 : 3000;
@@ -1201,7 +1201,7 @@ function pollThread(threadId, attempt = 0) {
         state.pollTimers.delete(threadId);
       }
     } catch (error) {
-      setStatus(`同步失败：${error.message}`, true);
+      setStatus(`Sync failed: ${error.message}`, true);
       pollThread(threadId, attempt + 1);
     }
   }, delay);
@@ -1211,11 +1211,11 @@ function normalizeTurns(turns) { return Array.isArray(turns) ? [...turns].sort((
 function turnTimestamp(turn) { const value = turn?.startedAt || turn?.createdAt || turn?.completedAt || 0; return value < 100000000000 ? value * 1000 : value; }
 function itemRole(item) {
   const raw = String(item?.role || item?.author?.role || item?.message?.role || item?.item?.role || item?.type || "").toLowerCase();
-  if (raw === "user" || raw === "usermessage" || raw === "input_text" || raw === "input") return "用户";
+  if (raw === "user" || raw === "usermessage" || raw === "input_text" || raw === "input") return "User";
   if (raw === "assistant" || raw === "agent" || raw === "codex" || raw === "agentmessage" || raw === "assistantmessage" || raw === "output_text" || raw === "output") return "Codex";
-  if (raw === "toolcall" || raw === "tool_call" || raw === "function_call") return "工具";
-  if (raw === "toolresult" || raw === "tool_result" || raw === "function_call_output") return "工具结果";
-  return item?.type || item?.role || "消息";
+  if (raw === "toolcall" || raw === "tool_call" || raw === "function_call") return "Tool";
+  if (raw === "toolresult" || raw === "tool_result" || raw === "function_call_output") return "Tool Result";
+  return item?.type || item?.role || "Message";
 }
 function itemText(item) {
   const text = extractText(item, 0);
@@ -1233,7 +1233,7 @@ function extractText(value, depth) {
   }
   return "";
 }
-function formatTime(value) { if (!value) return "未知时间"; const ms = value < 100000000000 ? value * 1000 : value; return new Date(ms).toLocaleString(); }
+function formatTime(value) { if (!value) return "Unknown time"; const ms = value < 100000000000 ? value * 1000 : value; return new Date(ms).toLocaleString(); }
 async function sendMessage(threadId, text, skipResume = false) {
   if (!skipResume) await rpc("thread/resume", { threadId });
   return await rpc("turn/start", { threadId, clientUserMessageId: `codex-plus-mobile-${Date.now()}`, input: [{ type: "text", text }] });
@@ -1254,16 +1254,16 @@ $("composer").onsubmit = async (event) => {
       const result = await rpc("thread/start", state.selectedCwd ? { cwd: state.selectedCwd } : {});
       const thread = result?.thread || result?.data || result;
       threadId = thread?.id || result?.threadId || result?.id;
-      if (!threadId) throw new Error("新建会话失败：app-server 未返回 thread id");
+      if (!threadId) throw new Error("Failed to create conversation: app-server did not return thread id");
       state.selectedId = threadId;
       isNew = true;
     }
     rememberPendingMessage(threadId, text);
-    appendMessageNode("用户", text, true);
-    setStatus("正在思考...");
+    appendMessageNode("User", text, true);
+    setStatus("Thinking...");
     pollThread(threadId);
     sendMessage(threadId, text, isNew)
-      .then(() => setStatus("已发送，正在同步回复..."))
+      .then(() => setStatus("Sent, syncing reply..."))
       .catch((error) => {
         forgetPendingMessage(threadId, text);
         setStatus(error.message, true);

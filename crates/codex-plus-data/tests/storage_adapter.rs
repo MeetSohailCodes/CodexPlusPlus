@@ -125,7 +125,7 @@ fn delete_local_session_creates_backup_and_undo_restores_rows() {
     let deleted = adapter.delete_local(&session("s1", "First"));
 
     assert_eq!(deleted.status, DeleteStatus::LocalDeleted);
-    assert_eq!(deleted.message, "已从本地存储删除");
+    assert_eq!(deleted.message, "Deleted from local storage");
     let db = Connection::open(&db_path).unwrap();
     assert_eq!(
         db.query_row("SELECT COUNT(*) FROM sessions", [], |row| row
@@ -399,7 +399,7 @@ fn delete_local_from_paths_removes_duplicate_threads_from_all_databases() {
     );
 
     assert_eq!(result.status, DeleteStatus::LocalDeleted);
-    assert_eq!(result.message, "已从 2 个本地存储删除");
+    assert_eq!(result.message, "Deleted from 2 local storage(s)");
     assert_eq!(thread_count(&first_db, "t1"), 0);
     assert_eq!(thread_count(&second_db, "t1"), 0);
     assert!(!first_rollout.exists());
@@ -668,7 +668,7 @@ fn archived_lookup_workspace_move_and_sort_keys_match_expected_shape() {
     let adapter = SQLiteStorageAdapter::new(&db_path, BackupStore::new(tmp.path().join("backups")));
 
     assert_eq!(
-        adapter.find_archived_thread_by_title("Codex Thread 2026年5月9日，1:19 · RustGUI"),
+        adapter.find_archived_thread_by_title("Codex Thread May 9, 2026, 1:19 · RustGUI"),
         Some(session("t1", "Codex Thread"))
     );
 

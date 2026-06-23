@@ -297,11 +297,11 @@ async fn runtime_status_devtools_repair_and_ads_routes_are_dispatched() {
     );
     assert_eq!(
         handle_bridge_request(ctx.clone(), "/backend/status", json!({})).await,
-        json!({"status": "ok", "message": "后端已连接", "version": codex_plus_core::version::VERSION})
+        json!({"status": "ok", "message": "Backend connected", "version": codex_plus_core::version::VERSION})
     );
     assert_eq!(
         handle_bridge_request(ctx.clone(), "/backend/repair", json!({})).await,
-        json!({"status": "ok", "message": "后端已修复", "version": codex_plus_core::version::VERSION})
+        json!({"status": "ok", "message": "Backend repaired", "version": codex_plus_core::version::VERSION})
     );
     assert_eq!(
         handle_bridge_request(ctx.clone(), "/ads", json!({})).await,
@@ -646,11 +646,11 @@ async fn core_runtime_reload_evaluates_enabled_user_bundle_and_status_is_ok() {
 
     assert_eq!(
         status,
-        json!({"status": "ok", "message": "后端已连接", "version": codex_plus_core::version::VERSION})
+        json!({"status": "ok", "message": "Backend connected", "version": codex_plus_core::version::VERSION})
     );
     assert_eq!(
         repaired,
-        json!({"status": "ok", "message": "后端已连接", "version": codex_plus_core::version::VERSION})
+        json!({"status": "ok", "message": "Backend connected", "version": codex_plus_core::version::VERSION})
     );
     assert_eq!(reloaded["scripts"][0]["key"], "builtin:demo.js");
     let evaluated = evaluated.lock().unwrap();
@@ -692,7 +692,7 @@ async fn core_runtime_manager_route_attempts_to_open_manager_binary() {
 
     let result = handle_bridge_request(ctx, "/manager/open", json!({})).await;
 
-    assert_ne!(result["message"], "管理工具启动未接入当前运行时");
+    assert_ne!(result["message"], "Manager launcher not connected to current runtime");
 }
 
 #[tokio::test]
@@ -1056,13 +1056,13 @@ impl BridgeRuntimeService for FakeRuntime {
 
     async fn backend_status(&self) -> anyhow::Result<Value> {
         Ok(
-            json!({"status": "ok", "message": "后端已连接", "version": codex_plus_core::version::VERSION}),
+            json!({"status": "ok", "message": "Backend connected", "version": codex_plus_core::version::VERSION}),
         )
     }
 
     async fn repair_backend(&self) -> anyhow::Result<Value> {
         Ok(
-            json!({"status": "ok", "message": "后端已修复", "version": codex_plus_core::version::VERSION}),
+            json!({"status": "ok", "message": "Backend repaired", "version": codex_plus_core::version::VERSION}),
         )
     }
 

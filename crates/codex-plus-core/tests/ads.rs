@@ -42,16 +42,16 @@ fn normalizes_remote_ads_for_plugin_and_manager_rendering() {
             {
                 "id": "sponsor",
                 "type": "sponsor",
-                "title": "赞助商",
-                "description": "推荐内容",
+                "title": "Sponsor",
+                "description": "Recommended content",
                 "url": "https://example.test",
-                "highlights": ["稳定"]
+                "highlights": ["Stable"]
             },
             {
                 "id": "normal",
                 "type": "normal",
-                "title": "普通推荐",
-                "description": "推荐内容",
+                "title": "Regular recommendation",
+                "description": "Recommended content",
                 "url": "https://example.org"
             },
             {

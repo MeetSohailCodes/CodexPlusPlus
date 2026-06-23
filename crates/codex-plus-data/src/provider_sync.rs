@@ -683,7 +683,7 @@ fn build_encrypted_content_warning(
     }
     let total = encrypted_content_counts.values().sum::<usize>();
     Some(format!(
-        "检测到 {total} 个会话文件包含来自 {} 的 encrypted_content。可见会话元数据已同步到 {target_provider}，但继续或压缩这些历史可能出现 invalid_encrypted_content；需要可靠续聊时请切回原供应商/账号或开启新会话。",
+        "Detected {total} session file(s) containing encrypted_content from {}. Visible session metadata has been synced to {target_provider}, but continuing or compressing these histories may cause invalid_encrypted_content; switch back to the original provider/account or start a new session for reliable continuation.",
         risky_providers.join(", ")
     ))
 }

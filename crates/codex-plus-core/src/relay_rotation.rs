@@ -1,5 +1,5 @@
 /**
- * @description 聚合供应商轮转选择器，负责按失败、对话、请求和权重策略选择已有中转配置。
+ * @description Aggregate provider rotation selector, responsible for selecting existing relay configurations based on failure, conversation, request, and weight strategies.
  * @author Albert_Luo
  * @email 480199976@qq.com
  * @date 2026-05-27 00:00
@@ -30,23 +30,23 @@ pub enum SelectionError {
 impl std::fmt::Display for SelectionError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            SelectionError::NoActiveAggregate => write!(formatter, "未找到当前聚合供应商"),
+            SelectionError::NoActiveAggregate => write!(formatter, "No active aggregate provider found"),
             SelectionError::EmptyAggregateMembers { aggregate_id } => {
-                write!(formatter, "聚合供应商「{aggregate_id}」没有成员")
+                write!(formatter, "Aggregate provider '{aggregate_id}' has no members")
             }
             SelectionError::UnknownMemberRelay {
                 aggregate_id,
                 relay_id,
             } => write!(
                 formatter,
-                "聚合供应商「{aggregate_id}」引用了不存在的供应商「{relay_id}」"
+                "Aggregate provider '{aggregate_id}' references non-existent provider '{relay_id}'"
             ),
             SelectionError::InvalidMemberRelay {
                 aggregate_id,
                 relay_id,
             } => write!(
                 formatter,
-                "聚合供应商「{aggregate_id}」成员「{relay_id}」缺少 API Base URL 或 Key"
+                "Aggregate provider '{aggregate_id}' member '{relay_id}' is missing API Base URL or Key"
             ),
         }
     }
