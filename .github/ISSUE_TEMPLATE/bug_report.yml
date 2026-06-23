@@ -1,83 +1,83 @@
-name: Bug 报告
-description: 程序崩溃、报错、配置写入异常、功能行为不符合预期。
+name: Bug Report
+description: Program crash, errors, configuration write exceptions, unexpected behavior.
 title: "[Bug]: "
 body:
   - type: markdown
     attributes:
       value: |
-        请尽量填写可复现的信息。涉及 API Key、Token、账号、Base URL 时请先脱敏。
+        Please provide reproducible information as much as possible. Sanitize API Key, Token, account, Base URL if involved.
   - type: dropdown
     id: area
     attributes:
-      label: 影响范围
+      label: Scope
       options:
-        - 启动 / 重启 Codex++
-        - 供应商切换 / 配置写入
-        - 协议转换 / 代理
+        - Start / Restart Codex++
+        - Provider Switch / Config Write
+        - Protocol Conversion / Proxy
         - MCP / skills / plugins
-        - 模型列表 / model_catalog_json
-        - 界面 / 交互
-        - 构建 / 安装
-        - 其他
+        - Model List / model_catalog_json
+        - UI / Interaction
+        - Build / Install
+        - Other
     validations:
       required: true
   - type: textarea
     id: current_behavior
     attributes:
-      label: 当前行为
-      description: 实际发生了什么？如果有报错，请贴完整错误文本。
-      placeholder: 点击重启 Codex++ 后没有启动，latest-status.json 显示...
+      label: Current Behavior
+      description: What actually happened? If there is an error, please paste the full error text.
+      placeholder: After clicking restart, Codex++ does not start, latest-status.json shows...
     validations:
       required: true
   - type: textarea
     id: expected_behavior
     attributes:
-      label: 预期行为
-      placeholder: 应该同步当前供应商配置并启动 Codex。
+      label: Expected Behavior
+      placeholder: Should sync current provider config and start Codex.
     validations:
       required: true
   - type: textarea
     id: reproduce
     attributes:
-      label: 复现步骤
+      label: Steps to Reproduce
       placeholder: |
-        1. 打开...
-        2. 选择...
-        3. 点击...
-        4. 看到...
+        1. Open...
+        2. Select...
+        3. Click...
+        4. See...
     validations:
       required: true
   - type: textarea
     id: logs
     attributes:
-      label: 日志 / 配置片段
-      description: 请删除或替换 API Key、Token、账号等敏感信息。
+      label: Logs / Config Snippets
+      description: Please delete or replace sensitive info like API Key, Token, account.
       render: shell
   - type: input
     id: version
     attributes:
-      label: Codex++ 版本
-      placeholder: 例如 1.1.8
+      label: Codex++ Version
+      placeholder: e.g. 1.1.8
     validations:
       required: true
   - type: dropdown
     id: os
     attributes:
-      label: 系统
+      label: Operating System
       options:
         - Windows
         - macOS
         - Linux
-        - 其他
+        - Other
     validations:
       required: true
   - type: checkboxes
     id: checklist
     attributes:
-      label: 提交前确认
+      label: Pre-submission Checklist
       options:
-        - label: 我已经脱敏了 API Key、Token、账号等敏感信息。
+        - label: I have sanitized sensitive info such as API Key, Token, account.
           required: true
-        - label: 我已经确认这是当前最新版仍然存在的问题。
+        - label: I have confirmed this issue still exists in the latest version.
           required: false
 

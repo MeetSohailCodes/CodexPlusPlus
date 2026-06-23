@@ -1,62 +1,62 @@
-name: 供应商 / 配置问题
-description: 供应商、Base URL、API Key、协议、config.toml、auth.json 相关问题。
+name: Provider / Config Issue
+description: Issues related to providers, Base URL, API Key, protocol, config.toml, auth.json.
 title: "[Config]: "
 body:
   - type: markdown
     attributes:
       value: |
-        这个模板用于定位供应商切换、纯 API、混入 API Key、协议转换、config.toml / auth.json 写入问题。请务必脱敏。
+        This template is for troubleshooting provider switching, pure API, mixed API Key, protocol conversion, config.toml / auth.json write issues. Please sanitize sensitive info.
   - type: dropdown
     id: relay_mode
     attributes:
-      label: 接入模式
+      label: Access Mode
       options:
-        - 纯 API
-        - 官方登录
-        - 官方登录 + 混入 API Key
-        - 不确定
+        - Pure API
+        - Official Login
+        - Official Login + Mixed API Key
+        - Unsure
     validations:
       required: true
   - type: dropdown
     id: protocol
     attributes:
-      label: 上游协议
+      label: Upstream Protocol
       options:
         - Responses API
         - Chat Completions
-        - 不确定
+        - Unsure
     validations:
       required: true
   - type: input
     id: base_url
     attributes:
       label: Base URL
-      description: 可以只写域名，敏感路径请脱敏。
+      description: Domain name is sufficient, sanitize sensitive paths.
       placeholder: https://example.com/v1
   - type: textarea
     id: config
     attributes:
-      label: 相关 config.toml / auth.json 片段
-      description: 请删除 API Key、Token、账号等敏感信息。
+      label: Relevant config.toml / auth.json snippets
+      description: Please delete sensitive info such as API Key, Token, account.
       render: toml
   - type: textarea
     id: behavior
     attributes:
-      label: 问题描述
-      placeholder: 切换供应商后 model_provider 被改成...
+      label: Problem Description
+      placeholder: After switching provider, model_provider is changed to...
     validations:
       required: true
   - type: textarea
     id: logs
     attributes:
-      label: 日志 / 状态文件
-      description: 可以贴 latest-status.json 或错误提示。
+      label: Logs / Status Files
+      description: You can paste latest-status.json or error messages.
       render: json
   - type: checkboxes
     id: checklist
     attributes:
-      label: 提交前确认
+      label: Pre-submission Checklist
       options:
-        - label: 我已经脱敏了 API Key、Token、账号等敏感信息。
+        - label: I have sanitized sensitive info such as API Key, Token, account.
           required: true
 

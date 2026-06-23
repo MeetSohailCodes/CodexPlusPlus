@@ -1,34 +1,34 @@
-# 更新日志
+# Changelog
 
 ## 1.2.4 - 2026-06-08
 
-- 新增 Zed 远程项目记录能力，支持维护 Codex++ 可识别的远程项目最近列表，并为远程工作区打开提供更稳定的回退策略。
-- 修复供应商同步在存在多条 `session_meta` 记录时只处理部分会话元数据的问题。
-- 修复 Windows 单实例启动保护，在默认端口被异常占用时改用更稳健的锁与端口回退逻辑，降低无法启动的概率。
-- 限制 Codex 快速服务档位只对支持的模型生效，避免不兼容模型收到无效配置。
-- 修复 macOS DMG 打包和 bundle 结构，恢复 launcher / manager 二进制重命名逻辑。
-- 补充混合登录中继模式文档说明。
-- 版本号更新到 `1.2.4`，同步 Rust workspace、Tauri、前端 package 和后端展示版本。
+- Added Zed remote project recording capability, supporting a recently used list of remote projects recognized by Codex++, and providing a more stable fallback strategy for opening remote workspaces.
+- Fixed vendor sync only processing partial session metadata when multiple `session_meta` records exist.
+- Fixed Windows single-instance startup protection by using a more robust lock and port fallback logic when the default port is abnormally occupied, reducing the likelihood of startup failure.
+- Restricted Codex fast service tier to only apply to supported models, preventing incompatible models from receiving invalid configurations.
+- Fixed macOS DMG packaging and bundle structure, restoring launcher/manager binary rename logic.
+- Added documentation for the hybrid login relay mode.
+- Updated version number to `1.2.4`, synchronized across Rust workspace, Tauri, frontend package, and backend display version.
 
 ## 1.1.8 - 2026-05-26
 
-- 新增上游分支 worktree 支持，可从上游仓库/分支创建和选择独立工作区。
-- 新增上游分支列表获取、默认值处理、远端解析和 worktree 创建相关接口与测试。
-- 优化供应商同步逻辑，保留 rollout 文件 mtime，减少同步后不必要的会话状态变化。
-- 新增独立的「工具与插件」页面，用于统一管理 Codex++ / Codex 的 MCP、skills、plugins，不再绑定到单个供应商。
-- 切换供应商时会合并当前启用的工具与插件配置，同时避免把供应商专属配置误写入通用配置。
-- 工具与插件列表改为从当前 Codex 配置实时读取启用状态，支持直接开关和删除条目。
-- 调整通用配置提取逻辑，改为手动提取，减少自动覆盖和配置污染。
-- 修复供应商切换隔离问题，避免 `model_catalog_json`、旧 `model_provider`、历史 provider 表和旧 `auth.json` 被带到新供应商。
-- 修复纯 API 模式下 `auth.json` 没有写入 API Key 的问题，并固定供应商 provider 名称为 `CodexPlusPlus`。
-- 优化模型目录写入方式，支持与原始模型目录合并，并在预览中显示真实路径。
-- 供应商配置页新增模型插入方式、模型列表、上下文大小、压缩上下文大小、目标功能等配置项。
-- 官方模式下隐藏仅混入 API Key 场景使用的模型列表和模型插入方式。
-- 将 Base URL、API Key、上游协议移动到模型列表之前，测试模型和上下文选项收进「更多选项」。
-- 修复 `model_reasoning_effort`、`plan_mode_reasoning_effort` 重复写入导致 TOML 解析失败的问题。
-- 修复重复插件表、空配置体、布尔值解析等导致配置文件解析失败的问题。
-- 优化供应商详情页布局，保持顶部返回和提示区域固定，增大默认窗口尺寸并减少顶部缝隙。
-- 移除脚本安装时的 checksum 阻断，避免市场脚本校验不一致导致安装失败。
-- 清理关于页和状态页中不需要展示的登录、当前供应商、配置文件路径等信息。
-- 调整提示信息居中显示，避免遮挡重启按钮。
-- 更新讨论群二维码、README 说明和 macOS DMG 打包脚本。
+- Added upstream branch worktree support, allowing creation and selection of independent workspaces from upstream repositories/branches.
+- Added interfaces and tests for upstream branch list retrieval, default value handling, remote resolution, and worktree creation.
+- Optimized vendor sync logic by preserving rollout file mtime, reducing unnecessary session state changes after sync.
+- Added a new "Tools & Plugins" page for unified management of Codex++ / Codex MCP, skills, and plugins, no longer tied to a single vendor.
+- When switching vendors, currently enabled tool and plugin configurations are merged, while avoiding writing vendor-specific configurations into the general configuration.
+- Tool and plugin lists now read enabled status in real-time from the current Codex configuration, supporting direct enable/disable and deletion of entries.
+- Adjusted general configuration extraction logic to manual extraction, reducing automatic overwrites and configuration pollution.
+- Fixed vendor switching isolation issues, preventing `model_catalog_json`, old `model_provider`, historical provider tables, and old `auth.json` from being carried over to the new vendor.
+- Fixed the issue where `auth.json` did not have the API Key written in pure API mode, and fixed the vendor provider name to `CodexPlusPlus`.
+- Optimized model catalog writing to support merging with the original model catalog, displaying the real path in the preview.
+- Added configuration items to the vendor configuration page including model insertion method, model list, context size, compressed context size, and target capabilities.
+- In official mode, hide the model list and model insertion method that are only used in mixed API Key scenarios.
+- Moved Base URL, API Key, and upstream protocol before the model list; moved test model and context options into "More Options".
+- Fixed duplicate writes of `model_reasoning_effort` and `plan_mode_reasoning_effort` causing TOML parsing failures.
+- Fixed configuration file parsing failures caused by duplicate plugin tables, empty configuration bodies, and boolean value parsing.
+- Optimized vendor detail page layout by keeping the top back button and notification area fixed, increasing the default window size, and reducing top gaps.
+- Removed checksum blocking during script installation to prevent installation failures caused by inconsistent marketplace script checksums.
+- Cleaned up login, current vendor, and configuration file path information from the About page and Status page that didn't need to be displayed.
+- Adjusted prompt messages to be centered, preventing them from obscuring the restart button.
+- Updated discussion group QR code, README instructions, and macOS DMG packaging script.

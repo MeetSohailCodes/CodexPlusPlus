@@ -307,7 +307,7 @@ pub struct StartupPayload {
 #[tauri::command]
 pub fn backend_version() -> CommandResult<VersionPayload> {
     ok(
-        "后端版本已读取。",
+        "Backend version read.",
         VersionPayload {
             version: codex_plus_core::version::VERSION.to_string(),
         },
@@ -317,7 +317,7 @@ pub fn backend_version() -> CommandResult<VersionPayload> {
 #[tauri::command]
 pub fn startup_options() -> CommandResult<StartupPayload> {
     ok(
-        "启动参数已读取。",
+        "Launch parameters read.",
         StartupPayload {
             show_update: startup_should_show_update(),
         },
@@ -344,7 +344,7 @@ pub async fn load_overview() -> CommandResult<OverviewPayload> {
     let payload = tauri::async_runtime::spawn_blocking(load_overview_payload).await;
     let Ok((codex_app_path, entrypoints, latest_launch)) = payload else {
         return failed(
-            "概览后台任务失败。",
+            "Overview background task failed.",
             OverviewPayload {
                 codex_app: path_state(None),
                 codex_version: None,
@@ -363,7 +363,7 @@ pub async fn load_overview() -> CommandResult<OverviewPayload> {
         );
     };
     ok(
-        "概览已加载。",
+        "Overview loaded.",
         OverviewPayload {
             codex_version: codex_app_path
                 .as_deref()
@@ -386,14 +386,14 @@ pub async fn load_overview() -> CommandResult<OverviewPayload> {
 
 #[tauri::command]
 pub fn launch_codex_plus(request: LaunchRequest) -> CommandResult<Value> {
-    spawn_codex_plus_launch(request, "启动任务已在后台开始，可稍后查看概览状态。")
+    spawn_codex_plus_launch(request, "Launch task started in background. Check overview status later.")
 }
 
 #[tauri::command]
 pub fn restart_codex_plus(request: LaunchRequest) -> CommandResult<Value> {
     codex_plus_core::watcher::stop_launcher_processes_and_wait();
     codex_plus_core::watcher::stop_codex_processes_and_wait();
-    spawn_codex_plus_launch(request, "Codex 已请求重启，启动任务正在后台运行。")
+    spawn_codex_plus_launch(request, "Codex requested restart, launch task running in background.")
 }
 
 fn spawn_codex_plus_launch(request: LaunchRequest, accepted_message: &str) -> CommandResult<Value> {
@@ -417,7 +417,7 @@ fn spawn_codex_plus_launch(request: LaunchRequest, accepted_message: &str) -> Co
             }),
         },
         Err(error) => failed(
-            &format!("启动静默入口失败：{error}"),
+            &format!("Failed to launch silent entry: {error}"),
             json!({
                 "debugPort": debug_port,
                 "helperPort": helper_port
@@ -445,12 +445,12 @@ fn spawn_silent_launcher(request: &LaunchRequest) -> anyhow::Result<()> {
     command
         .spawn()
         .map(|_| ())
-        .map_err(|error| anyhow::anyhow!("无法启动 {}：{error}", launcher.to_string_lossy()))
+        .map_err(|error| anyhow::anyhow!("Unable to launch {}: {error}", launcher.to_string_lossy()))
 }
 
 #[tauri::command]
 pub fn load_settings() -> CommandResult<SettingsPayload> {
-    settings_payload("设置已加载。", "设置读取失败")
+    settings_payload("Settings loaded.", "Failed to read settings")
 }
 
 #[tauri::command]
@@ -460,12 +460,12 @@ pub fn save_settings(settings: BackendSettings) -> CommandResult<SettingsPayload
         Ok(()) => {
             let wrapper_message = refresh_cli_wrapper_after_settings_save(&settings);
             settings_payload(
-                &format!("设置已保存。{wrapper_message}"),
-                "设置保存后重新读取失败",
+                &format!("Settings saved. {wrapper_message}"),
+                "Failed to re-read settings after save",
             )
         }
         Err(error) => failed(
-            &format!("保存设置失败：{error}"),
+            &format!("Failed to save settings: {error}"),
             SettingsPayload {
                 settings,
                 settings_path: codex_plus_core::paths::default_settings_path()
@@ -483,7 +483,7 @@ pub fn load_ccs_providers() -> CommandResult<CcsProvidersPayload> {
     match codex_plus_core::ccs_import::list_codex_providers_from_db(&db_path) {
         Ok(providers) => ok(
             &format!(
-                "已读取 cc-switch Codex 供应商配置：{} 个。",
+                "Read cc-switch Codex provider config: {} items.",
                 providers.len()
             ),
             CcsProvidersPayload {
@@ -492,7 +492,7 @@ pub fn load_ccs_providers() -> CommandResult<CcsProvidersPayload> {
             },
         ),
         Err(error) => failed(
-            &format!("读取 cc-switch 供应商配置失败：{error}"),
+            &format!("Failed to read cc-switch provider config: {error}"),
             CcsProvidersPayload {
                 db_path: db_path.to_string_lossy().to_string(),
                 providers: Vec::new(),
@@ -507,7 +507,7 @@ pub fn import_ccs_providers() -> CommandResult<SettingsPayload> {
         Ok(providers) => providers,
         Err(error) => {
             let payload = settings_payload_value().unwrap_or_else(|(_, payload)| payload);
-            return failed(&format!("读取 cc-switch 供应商配置失败：{error}"), payload);
+            return failed(&format!("Failed to read cc-switch provider config: {error}"), payload);
         }
     };
 
@@ -538,17 +538,17 @@ pub fn import_ccs_providers() -> CommandResult<SettingsPayload> {
     }
 
     if imported == 0 {
-        return settings_payload("没有新的 cc-switch 供应商配置需要导入。", "设置读取失败");
+        return settings_payload("No new cc-switch provider config to import.", "Failed to read settings");
     }
 
     settings = normalize_settings_before_save(settings);
     match store.save(&settings) {
         Ok(()) => settings_payload(
-            &format!("已从 cc-switch 导入供应商配置：{imported} 个。"),
-            "导入供应商配置后重新读取设置失败",
+            &format!("Imported provider config from cc-switch: {imported} items."),
+            "Failed to re-read settings after importing provider config",
         ),
         Err(error) => failed(
-            &format!("保存 cc-switch 供应商配置失败：{error}"),
+            &format!("Failed to save cc-switch provider config: {error}"),
             settings_payload_value().unwrap_or_else(|(_, payload)| payload),
         ),
     }
@@ -591,12 +591,12 @@ pub fn list_local_sessions() -> CommandResult<LocalSessionsPayload> {
     };
     if errors.is_empty() {
         ok(
-            &format!("已读取 {} 个本地会话。", payload.sessions.len()),
+            &format!("Read {} local sessions.", payload.sessions.len()),
             payload,
         )
     } else {
         failed(
-            &format!("读取部分本地会话失败：{}", errors.join("; ")),
+            &format!("Failed to read some local sessions: {}", errors.join("; ")),
             payload,
         )
     }
@@ -614,7 +614,7 @@ pub fn list_zed_remote_projects() -> CommandResult<ZedRemoteProjectsPayload> {
         )
         .unwrap_or_default();
         return ok(
-            &format!("已读取 {} 个 Zed 远程项目。", projects.len()),
+            &format!("Read {} Zed remote projects.", projects.len()),
             ZedRemoteProjectsPayload { projects },
         );
     }
@@ -622,7 +622,7 @@ pub fn list_zed_remote_projects() -> CommandResult<ZedRemoteProjectsPayload> {
         result
             .get("message")
             .and_then(Value::as_str)
-            .unwrap_or("读取 Zed 远程项目失败。"),
+            .unwrap_or("Failed to read Zed remote projects."),
         ZedRemoteProjectsPayload {
             projects: Vec::new(),
         },
@@ -644,7 +644,7 @@ pub fn open_zed_remote(payload: Value) -> CommandResult<ZedRemoteOpenPayload> {
         .to_string();
     if result.get("status").and_then(Value::as_str) == Some("ok") {
         return ok(
-            "已在 Zed Remote 打开项目。",
+            "Project opened in Zed Remote.",
             ZedRemoteOpenPayload { url, strategy },
         );
     }
@@ -652,7 +652,7 @@ pub fn open_zed_remote(payload: Value) -> CommandResult<ZedRemoteOpenPayload> {
         result
             .get("message")
             .and_then(Value::as_str)
-            .unwrap_or("无法在 Zed Remote 打开项目。"),
+            .unwrap_or("Unable to open project in Zed Remote."),
         ZedRemoteOpenPayload { url, strategy },
     )
 }
@@ -666,7 +666,7 @@ pub fn forget_zed_remote_project(id: String) -> CommandResult<ZedRemoteProjectsP
             result
                 .get("message")
                 .and_then(Value::as_str)
-                .unwrap_or("移除 Zed 远程项目失败。"),
+                .unwrap_or("Failed to remove Zed remote project."),
             ZedRemoteProjectsPayload {
                 projects: Vec::new(),
             },
@@ -680,11 +680,11 @@ pub fn delete_local_session(request: DeleteLocalSessionRequest) -> CommandResult
     let session_id = request.session_id.trim();
     if session_id.is_empty() {
         return failed(
-            "会话 ID 不能为空。",
+            "Session ID cannot be empty.",
             DeleteResult {
                 status: codex_plus_core::models::DeleteStatus::Failed,
                 session_id: String::new(),
-                message: "会话 ID 不能为空。".to_string(),
+                message: "Session ID cannot be empty.".to_string(),
                 undo_token: None,
                 backup_path: None,
             },
@@ -1029,11 +1029,11 @@ pub async fn load_provider_sync_targets() -> CommandResult<Value> {
                 .collect::<Vec<_>>();
             merge_manual_provider_sync_targets(&mut targets, &manual, &settings);
             ok(
-                "Provider 同步目标已加载。",
+                "Provider sync targets loaded.",
                 serde_json::to_value(targets).unwrap_or_else(|_| json!({})),
             )
         }
-        Err(error) => failed(&format!("Provider 同步目标加载失败：{error}"), json!({})),
+        Err(error) => failed(&format!("Failed to load provider sync targets: {error}"), json!({})),
     }
 }
 
@@ -1097,7 +1097,7 @@ pub async fn sync_providers_now(target_provider: Option<String>) -> CommandResul
             }
             ok(
                 &format!(
-                    "供应商已同步一次：{} 个会话文件，{} 行索引，跳过 {} 个占用文件。",
+                    "Provider synced once: {} session files, {} row indices, skipped {} locked files.",
                     sync.changed_session_files,
                     sync.sqlite_rows_updated,
                     sync.skipped_locked_rollout_files.len()
@@ -1118,7 +1118,7 @@ pub async fn sync_providers_now(target_provider: Option<String>) -> CommandResul
                 }),
             )
         }
-        Err(error) => failed(&format!("供应商同步失败：{error}"), json!({})),
+        Err(error) => failed(&format!("Provider sync failed: {error}"), json!({})),
     }
 }
 
@@ -1151,9 +1151,9 @@ fn persist_provider_sync_selection(provider: &str) {
 #[tauri::command]
 pub async fn load_ads() -> CommandResult<AdsPayload> {
     match codex_plus_core::ads::fetch_ad_list().await {
-        Ok(payload) => ok("推荐内容已加载。", ads_payload(payload)),
+        Ok(payload) => ok("Recommended content loaded.", ads_payload(payload)),
         Err(error) => failed(
-            &format!("推荐内容加载失败：{error}"),
+            &format!("Failed to load recommended content: {error}"),
             AdsPayload {
                 version: 1,
                 ads: Vec::new(),
@@ -1166,12 +1166,12 @@ pub async fn load_ads() -> CommandResult<AdsPayload> {
 pub async fn refresh_script_market() -> CommandResult<ScriptMarketPayload> {
     match script_market::fetch_market_manifest(script_market::DEFAULT_MARKET_INDEX_URL).await {
         Ok(manifest) => ok(
-            "脚本市场已刷新。",
-            script_market_payload_from_manifest(&manifest, "ok", "脚本市场已刷新。"),
+            "Script market refreshed.",
+            script_market_payload_from_manifest(&manifest, "ok", "Script market refreshed."),
         ),
         Err(error) => failed(
-            &format!("脚本市场加载失败：{error}"),
-            failed_script_market_payload(&format!("脚本市场加载失败：{error}")),
+            &format!("Failed to load script market: {error}"),
+            failed_script_market_payload(&format!("Failed to load script market: {error}")),
         ),
     }
 }
@@ -1181,8 +1181,8 @@ pub async fn install_market_script(id: String) -> CommandResult<ScriptMarketPayl
     let trimmed = id.trim();
     if trimmed.is_empty() {
         return failed(
-            "脚本 id 不能为空。",
-            failed_script_market_payload("脚本 id 不能为空。"),
+            "Script id cannot be empty.",
+            failed_script_market_payload("Script id cannot be empty."),
         );
     }
     let manifest =
@@ -1190,29 +1190,29 @@ pub async fn install_market_script(id: String) -> CommandResult<ScriptMarketPayl
             Ok(manifest) => manifest,
             Err(error) => {
                 return failed(
-                    &format!("脚本市场加载失败：{error}"),
-                    failed_script_market_payload(&format!("脚本市场加载失败：{error}")),
+                    &format!("Failed to load script market: {error}"),
+                    failed_script_market_payload(&format!("Failed to load script market: {error}")),
                 );
             }
         };
     let Some(script) = manifest.scripts.iter().find(|script| script.id == trimmed) else {
         return failed(
-            "市场清单中未找到该脚本。",
-            script_market_payload_from_manifest(&manifest, "failed", "市场清单中未找到该脚本。"),
+            "Script not found in market manifest.",
+            script_market_payload_from_manifest(&manifest, "failed", "Script not found in market manifest."),
         );
     };
     let manager = default_user_script_manager();
     match script_market::install_market_script(&manager, script).await {
         Ok(()) => ok(
-            "脚本已安装。",
-            script_market_payload_from_manifest(&manifest, "ok", "脚本已安装。"),
+            "Script installed.",
+            script_market_payload_from_manifest(&manifest, "ok", "Script installed."),
         ),
         Err(error) => failed(
-            &format!("安装脚本失败：{error}"),
+            &format!("Failed to install script: {error}"),
             script_market_payload_from_manifest(
                 &manifest,
                 "failed",
-                &format!("安装脚本失败：{error}"),
+                &format!("Failed to install script: {error}"),
             ),
         ),
     }
@@ -1222,20 +1222,20 @@ pub async fn install_market_script(id: String) -> CommandResult<ScriptMarketPayl
 pub fn set_user_script_enabled(key: String, enabled: bool) -> CommandResult<SettingsPayload> {
     let trimmed = key.trim();
     if trimmed.is_empty() {
-        return failed("脚本 key 不能为空。", fallback_settings_payload());
+        return failed("Script key cannot be empty.", fallback_settings_payload());
     }
     let manager = default_user_script_manager();
     match manager.set_script_enabled(trimmed, enabled) {
         Ok(_) => settings_payload(
             if enabled {
-                "脚本已启用。"
+                "Script enabled."
             } else {
-                "脚本已禁用。"
+                "Script disabled."
             },
-            "脚本启停失败",
+            "Failed to toggle script",
         ),
         Err(error) => failed(
-            &format!("脚本启停失败：{error}"),
+            &format!("Failed to toggle script: {error}"),
             fallback_settings_payload(),
         ),
     }
@@ -1245,13 +1245,13 @@ pub fn set_user_script_enabled(key: String, enabled: bool) -> CommandResult<Sett
 pub fn delete_user_script(key: String) -> CommandResult<SettingsPayload> {
     let trimmed = key.trim();
     if trimmed.is_empty() {
-        return failed("脚本 key 不能为空。", fallback_settings_payload());
+        return failed("Script key cannot be empty.", fallback_settings_payload());
     }
     let manager = default_user_script_manager();
     match manager.delete_user_script(trimmed) {
-        Ok(_) => settings_payload("脚本已删除。", "脚本删除失败"),
+        Ok(_) => settings_payload("Script deleted.", "Failed to delete script"),
         Err(error) => failed(
-            &format!("脚本删除失败：{error}"),
+            &format!("Failed to delete script: {error}"),
             fallback_settings_payload(),
         ),
     }
@@ -1261,11 +1261,11 @@ pub fn delete_user_script(key: String) -> CommandResult<SettingsPayload> {
 pub fn open_external_url(url: String) -> CommandResult<Value> {
     let trimmed = url.trim();
     if !(trimmed.starts_with("https://") || trimmed.starts_with("http://")) {
-        return failed("只允许打开 http 或 https 链接。", json!({}));
+        return failed("Only http or https links are allowed.", json!({}));
     }
     match open_url(trimmed) {
-        Ok(()) => ok("已在系统浏览器打开链接。", json!({ "url": trimmed })),
-        Err(error) => failed(&format!("打开链接失败：{error}"), json!({ "url": trimmed })),
+        Ok(()) => ok("Link opened in system browser.", json!({ "url": trimmed })),
+        Err(error) => failed(&format!("Failed to open link: {error}"), json!({ "url": trimmed })),
     }
 }
 
@@ -1273,21 +1273,21 @@ pub fn open_external_url(url: String) -> CommandResult<Value> {
 pub async fn install_entrypoints() -> InstallActionResult {
     tauri::async_runtime::spawn_blocking(install::install_entrypoints)
         .await
-        .unwrap_or_else(|error| install_background_failure("安装入口", error))
+        .unwrap_or_else(|error| install_background_failure("Install entrypoints", error))
 }
 
 #[tauri::command]
 pub async fn uninstall_entrypoints(options: InstallOptions) -> InstallActionResult {
     tauri::async_runtime::spawn_blocking(move || install::uninstall_entrypoints(options))
         .await
-        .unwrap_or_else(|error| install_background_failure("卸载入口", error))
+        .unwrap_or_else(|error| install_background_failure("Uninstall entrypoints", error))
 }
 
 #[tauri::command]
 pub async fn repair_shortcuts() -> InstallActionResult {
     tauri::async_runtime::spawn_blocking(install::repair_shortcuts)
         .await
-        .unwrap_or_else(|error| install_background_failure("修复快捷方式", error))
+        .unwrap_or_else(|error| install_background_failure("Repair shortcuts", error))
 }
 
 #[tauri::command]
@@ -1295,13 +1295,13 @@ pub fn repair_backend() -> CommandResult<SettingsPayload> {
     let settings = SettingsStore::default().load().unwrap_or_default();
     let message = match codex_plus_core::cli_wrapper::ensure_cli_wrapper(&settings) {
         Ok(Some(install)) => format!(
-            "后端已修复，命令包装器已指向 {}。",
+            "Backend repaired, CLI wrapper now points to {}.",
             install.real_codex.to_string_lossy()
         ),
-        Ok(None) => "后端已修复，命令包装器当前未启用。".to_string(),
-        Err(error) => format!("后端修复部分失败：{error}"),
+        Ok(None) => "Backend repaired, CLI wrapper currently disabled.".to_string(),
+        Err(error) => format!("Backend repair partially failed: {error}"),
     };
-    settings_payload(&message, "修复后重新读取设置失败")
+    settings_payload(&message, "Failed to re-read settings after repair")
 }
 
 #[tauri::command]
@@ -1310,9 +1310,9 @@ pub fn plugin_marketplace_status() -> CommandResult<PluginMarketplaceStatusPaylo
     let status = codex_plus_core::plugin_marketplace::openai_curated_marketplace_status(&home);
     ok(
         if status.needs_repair() {
-            "插件市场需要初始化或注册。"
+            "Plugin marketplace needs initialization or registration."
         } else {
-            "插件市场已可用。"
+            "Plugin marketplace is available."
         },
         PluginMarketplaceStatusPayload {
             codex_home: home.to_string_lossy().to_string(),
@@ -1336,11 +1336,11 @@ pub async fn repair_plugin_marketplace() -> CommandResult<PluginMarketplaceRepai
     {
         Ok(result) => ok(
             if result.initialized {
-                "插件市场已从 openai/plugins 初始化并注册。"
+                "Plugin marketplace initialized and registered from openai/plugins."
             } else if result.configured {
-                "已注册本地插件市场。"
+                "Registered local plugin marketplace."
             } else {
-                "插件市场已可用，无需修复。"
+                "Plugin marketplace is available, no repair needed."
             },
             PluginMarketplaceRepairPayload {
                 codex_home: home.to_string_lossy().to_string(),
@@ -1355,7 +1355,7 @@ pub async fn repair_plugin_marketplace() -> CommandResult<PluginMarketplaceRepai
             },
         ),
         Err(error) => failed(
-            &format!("插件市场修复失败：{error}"),
+            &format!("Plugin marketplace repair failed: {error}"),
             PluginMarketplaceRepairPayload {
                 codex_home: home.to_string_lossy().to_string(),
                 marketplace_root:
@@ -2697,7 +2697,7 @@ fn builtin_user_scripts_dir() -> PathBuf {
 fn diagnostics_report() -> String {
     let (codex_app_path, entrypoints, latest_launch) = load_overview_payload();
     let overview = ok(
-        "概览已加载。",
+        "Overview loaded.",
         OverviewPayload {
             codex_version: codex_app_path
                 .as_deref()
