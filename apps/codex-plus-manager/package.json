@@ -7,7 +7,7 @@
     "dev": "tauri dev",
     "build": "cargo build -p codex-plus-launcher --release && tauri build",
     "check": "tsc --noEmit -p tsconfig.json",
-    "vite:dev": "vite --host 127.0.0.1 --port 1420",
+    "vite:dev": "vite --host 127.0.0.1 --port 1421",
     "vite:build": "vite build"
   },
   "dependencies": {
