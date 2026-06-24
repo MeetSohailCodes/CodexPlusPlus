@@ -2831,6 +2831,84 @@ fn default_log_lines() -> usize {
     200
 }
 
+fn find_fonts_dir() -> Option<PathBuf> {
+    // Walk up from current dir first
+    if let Ok(current_dir) = std::env::current_dir() {
+        let mut dir = current_dir.as_path();
+        loop {
+            let fonts_path = dir.join("assets").join("fonts");
+            if fonts_path.is_dir() {
+                return Some(fonts_path);
+            }
+            if let Some(parent) = dir.parent() {
+                dir = parent;
+            } else {
+                break;
+            }
+        }
+    }
+    // Walk up from exe path
+    if let Ok(exe_path) = std::env::current_exe() {
+        let mut dir = exe_path.as_path();
+        loop {
+            let fonts_path = dir.join("assets").join("fonts");
+            if fonts_path.is_dir() {
+                return Some(fonts_path);
+            }
+            if let Some(parent) = dir.parent() {
+                dir = parent;
+            } else {
+                break;
+            }
+        }
+    }
+    // Fallback to absolute path from prompt
+    let fallback = PathBuf::from(r"C:\Users\sohail\Github\CodexPlusPlus\assets\fonts");
+    if fallback.is_dir() {
+        return Some(fallback);
+    }
+    None
+}
+
+#[tauri::command]
+pub fn list_assets_fonts() -> Result<Vec<String>, String> {
+    let fonts_dir = find_fonts_dir().ok_or_else(|| "Fonts directory not found".to_string())?;
+    let mut fonts = Vec::new();
+    let entries = std::fs::read_dir(fonts_dir).map_err(|e| e.to_string())?;
+    for entry in entries {
+        if let Ok(entry) = entry {
+            let path = entry.path();
+            if path.is_file() {
+                if let Some(ext) = path.extension() {
+                    let ext_str = ext.to_string_lossy().to_lowercase();
+                    if ext_str == "ttf" || ext_str == "otf" || ext_str == "woff" || ext_str == "woff2" {
+                        if let Some(name) = path.file_name() {
+                            fonts.push(name.to_string_lossy().into_owned());
+                        }
+                    }
+                }
+            }
+        }
+    }
+    Ok(fonts)
+}
+
+#[tauri::command]
+pub fn read_font_file(name: String) -> Result<String, String> {
+    if name.contains("..") || name.contains('/') || name.contains('\\') {
+        return Err("Invalid font name".to_string());
+    }
+    let fonts_dir = find_fonts_dir().ok_or_else(|| "Fonts directory not found".to_string())?;
+    let font_path = fonts_dir.join(name);
+    if !font_path.exists() {
+        return Err("Font file not found".to_string());
+    }
+    let bytes = std::fs::read(font_path).map_err(|e| e.to_string())?;
+    use base64::prelude::*;
+    let b64 = BASE64_STANDARD.encode(bytes);
+    Ok(b64)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

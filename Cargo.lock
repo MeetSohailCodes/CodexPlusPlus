@@ -467,6 +467,7 @@ version = "1.2.18"
 dependencies = [
  "anyhow",
  "async-trait",
+ "base64 0.22.1",
  "codex-plus-core",
  "codex-plus-data",
  "directories",

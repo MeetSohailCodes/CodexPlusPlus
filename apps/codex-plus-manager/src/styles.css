@@ -89,8 +89,9 @@
   --motion-normal: 180ms;
   --motion-slow: 240ms;
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  font-family:
-    Inter, "Segoe UI", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-sans: Inter, "Segoe UI", "Microsoft YaHei", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: Georgia, serif;
+  font-family: var(--font-sans);
   font-size: 14px;
 }
 
@@ -188,6 +189,9 @@ body {
 
 .window-titlebar-title {
   opacity: 0.85;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
 }
 
 .window-controls {
@@ -392,7 +396,10 @@ body {
 
 .topbar h1 {
   margin: 0;
-  font-size: 20px;
+  font-size: 24px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
 }
 
 .topbar p {
@@ -473,8 +480,11 @@ body {
 
 .hero-layout h2 {
   margin: 4px 0 6px;
-  font-size: 22px;
+  font-size: 24px;
   line-height: 1.25;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
 }
 
 .hero-layout p,
@@ -529,8 +539,11 @@ body {
 
 .jojocode-overview h2 {
   margin: 2px 0 4px;
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1.25;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
 }
 
 .jojocode-overview p {
@@ -853,7 +866,7 @@ body {
 
 .env-conflict-tags small {
   color: hsl(var(--muted-foreground));
-  font-family: Inter, "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+  font-family: var(--font-sans);
 }
 
 .relay-master-switch {
@@ -1974,7 +1987,10 @@ body {
 
 .modal-head h2 {
   margin: 0 0 6px;
-  font-size: 18px;
+  font-size: 20px;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 700;
 }
 
 .modal-head p {

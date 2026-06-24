@@ -227,6 +227,13 @@ export function App() {
 
   useEffect(() => {
     void (async () => {
+      try {
+        const { loadFontsDynamically } = await import("@/lib/fonts");
+        await loadFontsDynamically();
+      } catch (err) {
+        console.error("Failed to load dynamic fonts:", err);
+      }
+
       const { invoke } = await import("@tauri-apps/api/core");
       const startup = await invoke<{ showUpdate: boolean }>("startup_options").catch(() => null);
       if (startup?.showUpdate) {
