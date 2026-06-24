@@ -40,7 +40,7 @@ export function RecommendationsTab({
                   : "Recommendations not yet loaded"}
               </strong>
               <span>
-                Content from BigPizzaV3/Ad-List, categorized as sponsor and
+                Content from MeetSohailCodes/Ad-List, categorized as sponsor and
                 normal recommendations.
               </span>
             </div>

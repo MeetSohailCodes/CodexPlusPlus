@@ -155,11 +155,11 @@
   ["__codexPlusHtmlCenteredThreadWidth", "__codexPlusViewportCenteredThreadWidth", "__codexPlusBoundedThreadCenter"].forEach((key) => {
     try {
       window[key]?.cleanup?.();
-    } catch (_) {}
+    } catch (_) { }
   });
   try {
     window.__codexPlusConversationViewCleanup?.();
-  } catch (_) {}
+  } catch (_) { }
   window.__codexPlusConversationViewCleanup = null;
   const selectors = {
     sidebarThread: "[data-app-action-sidebar-thread-id]",
@@ -1414,7 +1414,7 @@
         entries,
         ...(draft ? { draft } : {}),
       }));
-    } catch (_) {}
+    } catch (_) { }
   }
 
   function normalizeThreadServiceTierDraft(value) {
@@ -2110,8 +2110,8 @@
 
   async function directFetchCodexPlusAds() {
     const urls = [
-      "https://raw.githubusercontent.com/BigPizzaV3/Ad-List/main/ads.json",
-      "https://cdn.jsdelivr.net/gh/BigPizzaV3/Ad-List@main/ads.json",
+      "https://raw.githubusercontent.com/MeetSohailCodes/Ad-List/main/ads.json",
+      "https://cdn.jsdelivr.net/gh/MeetSohailCodes/Ad-List@main/ads.json",
     ];
     let lastError = null;
     const cacheBust = Date.now();
@@ -2290,7 +2290,7 @@
               <button type="button" class="codex-plus-action-button" data-codex-open-devtools="true">Open DevTools</button>
             </div>
             <div class="codex-plus-row">
-              <div><div class="codex-plus-row-title">About Codex++</div><div class="codex-plus-about">Codex++ is an enhanced menu injected via external launcher, without modifying the original Codex App installation files.<br>Build: <span data-codex-plus-build="true">${codexPlusBuild}</span><br>GitHub: <a href="https://github.com/BigPizzaV3/CodexPlusPlus" target="_blank" rel="noreferrer">https://github.com/BigPizzaV3/CodexPlusPlus</a><br>Discord: <a href="https://discord.gg/y96kX7A76v" target="_blank" rel="noreferrer">https://discord.gg/y96kX7A76v</a><br>Telegram: <a href="https://t.me/CodexPlusPlus" target="_blank" rel="noreferrer">https://t.me/CodexPlusPlus</a></div></div>
+              <div><div class="codex-plus-row-title">About Codex++</div><div class="codex-plus-about">Codex++ is an enhanced menu injected via external launcher, without modifying the original Codex App installation files.<br>Build: <span data-codex-plus-build="true">${codexPlusBuild}</span><br>GitHub: <a href="https://github.com/MeetSohailCodes/CodexPlusPlus" target="_blank" rel="noreferrer">https://github.com/MeetSohailCodes/CodexPlusPlus</a><br>Discord: <a href="https://discord.gg/y96kX7A76v" target="_blank" rel="noreferrer">https://discord.gg/y96kX7A76v</a><br>Telegram: <a href="https://t.me/CodexPlusPlus" target="_blank" rel="noreferrer">https://t.me/CodexPlusPlus</a></div></div>
             </div>
             <div class="codex-plus-row">
               <div><div class="codex-plus-row-title">Discord Community</div><div class="codex-plus-row-description">Join Discord for updates, feedback, or to discuss your experience.</div></div>
@@ -2395,7 +2395,7 @@
       }
       const issueButton = target?.closest("[data-codex-plus-issue]");
       if (issueButton) {
-        const issueUrl = "https://github.com/BigPizzaV3/CodexPlusPlus/issues";
+        const issueUrl = "https://github.com/MeetSohailCodes/CodexPlusPlus/issues";
         window.open(issueUrl, "_blank");
         return;
       }
@@ -3608,7 +3608,7 @@
       return;
     }
     if (window.__codexSessionDeleteBridge) {
-      window.__codexSessionDeleteBridge("/diagnostics/log", payload).catch(() => {});
+      window.__codexSessionDeleteBridge("/diagnostics/log", payload).catch(() => { });
     }
     const body = JSON.stringify(payload);
     try {
@@ -3616,13 +3616,13 @@
         const blob = new Blob([body], { type: "application/json" });
         if (navigator.sendBeacon(`${helperBase}/diagnostics/log`, blob)) return;
       }
-    } catch (_) {}
+    } catch (_) { }
     fetch(`${helperBase}/diagnostics/log`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body,
       keepalive: true,
-    }).catch(() => {});
+    }).catch(() => { });
   }
 
   sendCodexPlusDiagnostic("script_loaded", {

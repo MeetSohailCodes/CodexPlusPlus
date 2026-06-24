@@ -39,14 +39,14 @@ export function AboutTab({
           <div className="metric-list">
             <Metric label="Codex++ Version" value={overview?.current_version ?? update?.currentVersion ?? "-"} />
             <Metric label="Codex Version" value={overview?.codex_version ?? "Not detected"} />
-            <Metric label="Project URL" value="github.com/BigPizzaV3/CodexPlusPlus" />
+            <Metric label="Project URL" value="github.com/MeetSohailCodes/CodexPlusPlus" />
           </div>
           <Toolbar>
-            <Button onClick={() => void actions.openExternalUrl("https://github.com/BigPizzaV3/CodexPlusPlus")} variant="secondary">
+            <Button onClick={() => void actions.openExternalUrl("https://github.com/MeetSohailCodes/CodexPlusPlus")} variant="secondary">
               <ExternalLink className="h-4 w-4" />
               Open Project Homepage
             </Button>
-            <Button onClick={() => void actions.openExternalUrl("https://github.com/BigPizzaV3/CodexPlusPlus/issues")} variant="secondary">
+            <Button onClick={() => void actions.openExternalUrl("https://github.com/MeetSohailCodes/CodexPlusPlus/issues")} variant="secondary">
               <ExternalLink className="h-4 w-4" />
               Report Issues
             </Button>

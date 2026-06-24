@@ -590,12 +590,12 @@
           "timestamp": 1780841927553
         },
         {
-          "summary": "No prior opencode sessions exist for this project — this is the first session. Looking at the git log, the most recent work was: 1. **Force English injection menu & remove language toggle** (`assets/inject/renderer-inject.js`) 2. **Rebrand** from BigPizzaV3/Codex-Plus to MeetSoh…",
+          "summary": "No prior opencode sessions exist for this project — this is the first session. Looking at the git log, the most recent work was: 1. **Force English injection menu & remove language toggle** (`assets/inject/renderer-inject.js`) 2. **Rebrand** from MeetSohailCodes/Codex-Plus to MeetSoh…",
           "timestamp": 1780842804512
         }
       ],
       "lastCheckpoint": {
-        "summary": "No prior opencode sessions exist for this project — this is the first session. Looking at the git log, the most recent work was: 1. **Force English injection menu & remove language toggle** (`assets/inject/renderer-inject.js`) 2. **Rebrand** from BigPizzaV3/Codex-Plus to MeetSoh…",
+        "summary": "No prior opencode sessions exist for this project — this is the first session. Looking at the git log, the most recent work was: 1. **Force English injection menu & remove language toggle** (`assets/inject/renderer-inject.js`) 2. **Rebrand** from MeetSohailCodes/Codex-Plus to MeetSoh…",
         "timestamp": 1780842804512
       },
       "focused": true

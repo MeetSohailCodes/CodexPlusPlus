@@ -118,8 +118,8 @@ verify_app() {
 }
 
 prepare_icon
-create_app "Codex++" "CodexPlusPlus" "$BINARY_DIR/codex-plus-plus" "com.bigpizzav3.codexplusplus" "true"
-create_app "Codex++ Manager" "CodexPlusPlusManager" "$BINARY_DIR/codex-plus-plus-manager" "com.bigpizzav3.codexplusplus.manager" "false"
+create_app "Codex++" "CodexPlusPlus" "$BINARY_DIR/codex-plus-plus" "com.MeetSohailCodes.codexplusplus" "true"
+create_app "Codex++ Manager" "CodexPlusPlusManager" "$BINARY_DIR/codex-plus-plus-manager" "com.MeetSohailCodes.codexplusplus.manager" "false"
 
 sign_app "$STAGE/Codex++.app"
 sign_app "$STAGE/Codex++ Manager.app"

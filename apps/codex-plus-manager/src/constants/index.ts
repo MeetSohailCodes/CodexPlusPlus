@@ -21,7 +21,7 @@ import type {
 
 export const PROTOCOL_PROXY_BASE_URL = "http://127.0.0.1:57321/v1";
 export const CHAT_UPSTREAM_BASE_URL_KEY = "codex_plus_chat_base_url";
-export const SCRIPT_MARKET_REPOSITORY_URL = "https://github.com/BigPizzaV3/CodexPlusPlusScriptMarket";
+export const SCRIPT_MARKET_REPOSITORY_URL = "https://github.com/MeetSohailCodes/CodexPlusPlusScriptMarket";
 export const LOCAL_MOBILE_RELAY_URL = "ws://127.0.0.1:57323";
 export const PUBLIC_MOBILE_RELAY_URL = "ws://154.201.90.76:57323";
 

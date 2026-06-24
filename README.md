@@ -9,9 +9,9 @@
 </p>
 
 <p align="center">
-  <img alt="Release" src="https://img.shields.io/github/v/release/BigPizzaV3/CodexPlusPlus">
-  <img alt="Stars" src="https://img.shields.io/github/stars/BigPizzaV3/CodexPlusPlus">
-  <img alt="License" src="https://img.shields.io/github/license/BigPizzaV3/CodexPlusPlus">
+  <img alt="Release" src="https://img.shields.io/github/v/release/MeetSohailCodes/CodexPlusPlus">
+  <img alt="Stars" src="https://img.shields.io/github/stars/MeetSohailCodes/CodexPlusPlus">
+  <img alt="License" src="https://img.shields.io/github/license/MeetSohailCodes/CodexPlusPlus">
   <img alt="Rust" src="https://img.shields.io/badge/rust-1.85%2B-orange">
   <img alt="Tauri" src="https://img.shields.io/badge/tauri-2.x-24C8DB">
 </p>
@@ -20,7 +20,7 @@ Codex++ is an external enhancement launcher and manager for the Codex App. It do
 
 ## Quick Start
 
-Download the latest installer from [GitHub Releases](https://github.com/BigPizzaV3/CodexPlusPlus/releases):
+Download the latest installer from [GitHub Releases](https://github.com/MeetSohailCodes/CodexPlusPlus/releases):
 
 - Windows: `CodexPlusPlus-*-windows-x64-setup.exe`
 - macOS Intel: `CodexPlusPlus-*-macos-x64.dmg`
@@ -272,8 +272,8 @@ When relay injection mode is active, plugin entry unlock and forced plugin insta
 Recommended content is loaded from remote ad list:
 
 ```text
-https://raw.githubusercontent.com/BigPizzaV3/Ad-List/main/ads.json
-https://cdn.jsdelivr.net/gh/BigPizzaV3/Ad-List@main/ads.json
+https://raw.githubusercontent.com/MeetSohailCodes/Ad-List/main/ads.json
+https://cdn.jsdelivr.net/gh/MeetSohailCodes/Ad-List@main/ads.json
 ```
 
 Requests automatically append a `?v=timestamp` cache buster to avoid stale CDN content. Slow recommendation loading does not mark the backend connection as failed.
