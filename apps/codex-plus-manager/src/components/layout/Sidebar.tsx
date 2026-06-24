@@ -24,25 +24,7 @@ export function Sidebar({
 }: SidebarProps) {
   return (
     <aside className="sidebar">
-      <div className="brand">
-        <div className="brand-mark">C++</div>
-        <div className="brand-copy">
-          <div className="brand-title-row">
-            <div className="brand-title">Codex++</div>
-            {hasUpdate ? (
-              <button
-                className="update-dot"
-                onClick={() => onNavigate("about")}
-                title={`New version available: ${latestVersion ?? ""}`}
-                type="button"
-              >
-                <CircleArrowUp className="h-4 w-4" aria-hidden="true" />
-              </button>
-            ) : null}
-          </div>
-          <div className="brand-subtitle">Management Console</div>
-        </div>
-      </div>
+
       <nav className="nav">
         {routes.map((item) => {
           const Icon = item.icon;
@@ -64,6 +46,16 @@ export function Sidebar({
         })}
       </nav>
       <div className="sidebar-actions">
+        {hasUpdate ? (
+          <Button
+            onClick={() => onNavigate("about")}
+            size="icon"
+            title={`New version available: ${latestVersion ?? ""}`}
+            variant="outline"
+          >
+            <CircleArrowUp className="h-4 w-4" />
+          </Button>
+        ) : null}
         <Button
           onClick={onToggleTheme}
           size="icon"

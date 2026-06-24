@@ -357,18 +357,13 @@ body {
 
 .nav-item:hover {
   background: hsl(var(--sidebar-muted));
-  box-shadow: inset 2px 0 0 hsl(var(--brand-accent) / 0.75);
 }
 
 .nav-item.active {
-  border-color: hsl(var(--sidebar-border));
   background: hsl(var(--sidebar-muted));
 }
 
-.nav-item.active .nav-icon {
-  background: hsl(var(--brand-accent) / 0.18);
-  color: hsl(var(--brand-accent));
-}
+
 
 .workspace {
   display: flex;
