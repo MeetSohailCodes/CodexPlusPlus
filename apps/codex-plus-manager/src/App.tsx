@@ -120,7 +120,7 @@ export function App() {
         const { getCurrentWindow } = await import("@tauri-apps/api/window");
         const appWindow = getCurrentWindow();
         setIsMaximized(await appWindow.isMaximized());
-        
+
         unlisten = await appWindow.onResized(async () => {
           setIsMaximized(await appWindow.isMaximized());
         });
@@ -258,6 +258,18 @@ export function App() {
           <span className="window-titlebar-logo" data-tauri-drag-region>C++</span>
           <span className="window-titlebar-title" data-tauri-drag-region>Codex++ Manager</span>
         </div>
+        <div className="window-titlebar-actions">
+          <Button onClick={actions.toggleTheme} size="icon" title={theme === "dark" ? "Switch to light" : "Switch to dark"} variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-accent/40">
+            {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </Button>
+          <Button onClick={() => void actions.restart()} title="Restart Codex++" variant="ghost" className="h-7 px-2 text-xs gap-1.5 text-muted-foreground hover:text-foreground hover:bg-accent/40">
+            <Rocket className="h-3.5 w-3.5" />
+            Restart
+          </Button>
+          <Button onClick={() => void actions.refreshCurrent()} size="icon" title="Refresh current page" variant="ghost" className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-accent/40">
+            <RefreshCw className="h-3.5 w-3.5" />
+          </Button>
+        </div>
         <div className="window-controls">
           <button className="window-control-btn" onClick={handleMinimize} title="Minimize">
             <svg width="12" height="12" viewBox="0 0 12 12"><rect fill="currentColor" x="1.5" y="5.5" width="9" height="1" rx="0.5" /></svg>
@@ -285,24 +297,6 @@ export function App() {
           onRestart={() => void actions.restart()}
         />
         <main className="workspace">
-          <header className="topbar" key={`topbar-${route}`}>
-            <div>
-              <h1>{routeTitle(route)}</h1>
-              <p>{routeSubtitle(route)}</p>
-            </div>
-            <div className="topbar-actions">
-              <Button onClick={actions.toggleTheme} size="icon" title={theme === "dark" ? "Switch to light" : "Switch to dark"} variant="outline">
-                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-              </Button>
-              <Button onClick={() => void actions.restart()} title="Restart Codex++" variant="outline">
-                <Rocket className="h-4 w-4" />
-                Restart Codex++
-              </Button>
-              <Button onClick={() => void actions.refreshCurrent()} size="icon" title="Refresh current page" variant="outline">
-                <RefreshCw className="h-4 w-4" />
-              </Button>
-            </div>
-          </header>
           <section className="screen" key={route}>
             {route === "overview" && <OverviewTab overview={overview} pluginMarketplaceProgress={pluginMarketplaceProgress} ads={ads?.ads ?? []} actions={actions} launchForm={settingsForm} />}
             {route === "relay" && <RelayTab settings={settings} relayFiles={relayFiles} envConflicts={envConflicts} ccsProviders={ccsProviders} form={settingsForm} onFormChange={setSettingsForm} actions={actions} />}

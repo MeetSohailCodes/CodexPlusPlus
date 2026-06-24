@@ -194,6 +194,15 @@ body {
   font-weight: 700;
 }
 
+.window-titlebar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  margin-right: 16px;
+  -webkit-app-region: no-drag;
+}
+
 .window-controls {
   display: flex;
   align-items: center;
