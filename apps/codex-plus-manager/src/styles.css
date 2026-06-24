@@ -116,30 +116,117 @@ select {
     transform var(--motion-fast) var(--motion-ease);
 }
 
+html,
 body {
   margin: 0;
-  min-width: 760px;
+  padding: 0;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: hsl(var(--shell-bg));
+  background: transparent !important;
+}
+
+body {
+  min-width: 760px;
 }
 
 .shell {
   display: grid;
-  grid-template-columns: 208px minmax(0, 1fr);
+  grid-template-rows: 38px minmax(0, 1fr);
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  background: hsl(var(--shell-bg));
+  background: hsl(var(--sidebar-bg));
   color: hsl(var(--foreground));
+  border-radius: 12px;
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+}
+
+.app-body {
+  display: grid;
+  grid-template-columns: 208px minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Custom Window Title Bar */
+.window-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 38px;
+  background: hsl(var(--sidebar-bg));
+  padding: 0 16px;
+  user-select: none;
+  -webkit-app-region: drag;
+}
+
+.window-titlebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  -webkit-app-region: drag;
+}
+
+.window-titlebar-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: hsl(var(--brand-accent));
+  color: hsl(var(--primary-foreground));
+  font-weight: 800;
+  font-size: 10px;
+  width: 22px;
+  height: 22px;
+  border-radius: 4px;
+}
+
+.window-titlebar-title {
+  opacity: 0.85;
+}
+
+.window-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  -webkit-app-region: no-drag;
+}
+
+.window-control-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: hsl(var(--foreground));
+  cursor: pointer;
+  border-radius: 4px;
+  opacity: 0.75;
+  transition: opacity 120ms ease, background-color 120ms ease;
+}
+
+.window-control-btn:hover {
+  opacity: 1;
+  background-color: hsl(var(--accent));
+}
+
+.window-control-btn.close:hover {
+  background-color: #ef4444;
+  color: white;
 }
 
 .sidebar {
   min-height: 0;
   overflow: hidden;
-  border-right: 1px solid hsl(var(--sidebar-border));
-  background: hsl(var(--sidebar-bg));
+  border-right: none;
+  background: transparent;
   padding: 14px 10px;
 }
 
@@ -285,11 +372,15 @@ body {
 
 .workspace {
   display: flex;
-  height: 100vh;
+  height: calc(100% - 10px);
+  margin: 0 10px 10px 0;
   min-width: 0;
   min-height: 0;
   flex-direction: column;
   overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid hsl(var(--border));
+  background: hsl(var(--shell-bg));
 }
 
 .topbar {
@@ -299,7 +390,7 @@ body {
   justify-content: space-between;
   min-height: 72px;
   padding: 14px 20px;
-  border-bottom: 1px solid hsl(var(--border));
+  border-bottom: 1px solid hsl(var(--border) / 0.6);
   background: hsl(var(--shell-bg));
   animation: topbar-enter var(--motion-normal) var(--motion-ease) both;
 }
@@ -2560,7 +2651,7 @@ body {
     min-width: 0;
   }
 
-  .shell {
+  .app-body {
     grid-template-columns: 64px minmax(0, 1fr);
   }
 

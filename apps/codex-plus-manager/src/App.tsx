@@ -111,6 +111,60 @@ const defaultSettings: BackendSettings = {
 export function App() {
   const [theme, setTheme] = useState<Theme>(() => loadInitialTheme());
   const [route, setRoute] = useState<Route>(() => loadInitialRoute());
+  const [isMaximized, setIsMaximized] = useState(false);
+
+  useEffect(() => {
+    let unlisten: (() => void) | undefined;
+    void (async () => {
+      try {
+        const { getCurrentWindow } = await import("@tauri-apps/api/window");
+        const appWindow = getCurrentWindow();
+        setIsMaximized(await appWindow.isMaximized());
+        
+        unlisten = await appWindow.onResized(async () => {
+          setIsMaximized(await appWindow.isMaximized());
+        });
+      } catch (err) {
+        console.warn("Tauri window API is not available or failed to load:", err);
+      }
+    })();
+    return () => {
+      if (unlisten) unlisten();
+    };
+  }, []);
+
+  const handleMinimize = async () => {
+    try {
+      const { getCurrentWindow } = await import("@tauri-apps/api/window");
+      await getCurrentWindow().minimize();
+    } catch (err) {
+      console.error("Failed to minimize window:", err);
+    }
+  };
+
+  const handleMaximize = async () => {
+    try {
+      const { getCurrentWindow } = await import("@tauri-apps/api/window");
+      const appWindow = getCurrentWindow();
+      if (await appWindow.isMaximized()) {
+        await appWindow.unmaximize();
+      } else {
+        await appWindow.maximize();
+      }
+    } catch (err) {
+      console.error("Failed to maximize/restore window:", err);
+    }
+  };
+
+  const handleClose = async () => {
+    try {
+      const { getCurrentWindow } = await import("@tauri-apps/api/window");
+      await getCurrentWindow().close();
+    } catch (err) {
+      console.error("Failed to close window:", err);
+    }
+  };
+
   const [notice, setNotice] = useState<{ title: string; message: string; status?: Status } | null>(null);
   const [overview, setOverview] = useState<OverviewResult | null>(null);
   const [settings, setSettings] = useState<SettingsResult | null>(null);
@@ -192,49 +246,72 @@ export function App() {
 
   return (
     <div className={`shell ${theme}`}>
-      <Sidebar
-        currentRoute={route}
-        onNavigate={(r) => void actions.navigate(r)}
-        hasUpdate={hasUpdate}
-        latestVersion={update?.latestVersion ?? undefined}
-        theme={theme}
-        onToggleTheme={actions.toggleTheme}
-        onRestart={() => void actions.restart()}
-      />
-      <main className="workspace">
-        <header className="topbar" key={`topbar-${route}`}>
-          <div>
-            <h1>{routeTitle(route)}</h1>
-            <p>{routeSubtitle(route)}</p>
-          </div>
-          <div className="topbar-actions">
-            <Button onClick={actions.toggleTheme} size="icon" title={theme === "dark" ? "Switch to light" : "Switch to dark"} variant="outline">
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </Button>
-            <Button onClick={() => void actions.restart()} title="Restart Codex++" variant="outline">
-              <Rocket className="h-4 w-4" />
-              Restart Codex++
-            </Button>
-            <Button onClick={() => void actions.refreshCurrent()} size="icon" title="Refresh current page" variant="outline">
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-          </div>
-        </header>
-        <section className="screen" key={route}>
-          {route === "overview" && <OverviewTab overview={overview} pluginMarketplaceProgress={pluginMarketplaceProgress} ads={ads?.ads ?? []} actions={actions} launchForm={settingsForm} />}
-          {route === "relay" && <RelayTab settings={settings} relayFiles={relayFiles} envConflicts={envConflicts} ccsProviders={ccsProviders} form={settingsForm} onFormChange={setSettingsForm} actions={actions} />}
-          {route === "mobileControl" && <MobileControlTab form={settingsForm} onFormChange={setSettingsForm} actions={actions} />}
-          {route === "sessions" && <SessionsTab settings={settings} form={settingsForm} sessions={localSessions} providerSyncProgress={providerSyncProgress} providerSyncTargets={providerSyncTargets} selectedProviderSyncTarget={selectedProviderSyncTarget} onFormChange={setSettingsForm} actions={actions} />}
-          {route === "context" && <ContextTab form={settingsForm} liveContextEntries={liveContextEntries} relayFiles={relayFiles} onFormChange={setSettingsForm} actions={actions} />}
-          {route === "enhance" && <EnhanceTab form={settingsForm} pluginMarketplaceProgress={pluginMarketplaceProgress} onFormChange={setSettingsForm} actions={actions} />}
-          {route === "zedRemote" && <ZedRemoteTab zedRemoteProjects={zedRemoteProjects} form={settingsForm} onFormChange={setSettingsForm} actions={actions} />}
-          {route === "userScripts" && <UserScriptsTab settings={settings} market={scriptMarket} actions={actions} />}
-          {route === "recommendations" && <RecommendationsTab ads={ads} actions={actions} />}
-          {route === "maintenance" && <MaintenanceTab overview={overview} watcher={watcher} settings={settings} launchForm={launchForm} onLaunchFormChange={setLaunchForm} removeOwnedData={removeOwnedData} onRemoveOwnedDataChange={setRemoveOwnedData} actions={actions} />}
-          {route === "about" && <AboutTab overview={overview} update={update} logs={logs} diagnostics={diagnostics} actions={actions} />}
-          {route === "settings" && <SettingsTab settings={settings} theme={theme} form={settingsForm} onFormChange={setSettingsForm} actions={actions} />}
-        </section>
-      </main>
+      <div className="window-titlebar" data-tauri-drag-region>
+        <div className="window-titlebar-brand" data-tauri-drag-region>
+          <span className="window-titlebar-logo" data-tauri-drag-region>C++</span>
+          <span className="window-titlebar-title" data-tauri-drag-region>Codex++ Manager</span>
+        </div>
+        <div className="window-controls">
+          <button className="window-control-btn" onClick={handleMinimize} title="Minimize">
+            <svg width="12" height="12" viewBox="0 0 12 12"><rect fill="currentColor" x="1.5" y="5.5" width="9" height="1" rx="0.5" /></svg>
+          </button>
+          <button className="window-control-btn" onClick={handleMaximize} title={isMaximized ? "Restore" : "Maximize"}>
+            {isMaximized ? (
+              <svg width="12" height="12" viewBox="0 0 12 12"><path fill="none" stroke="currentColor" strokeWidth="1.2" d="M1.5 4.5h6v6h-6z M4.5 1.5h6v6h-1.5" /></svg>
+            ) : (
+              <svg width="12" height="12" viewBox="0 0 12 12"><rect fill="none" stroke="currentColor" strokeWidth="1.2" x="2.5" y="2.5" width="7" height="7" rx="1" /></svg>
+            )}
+          </button>
+          <button className="window-control-btn close" onClick={handleClose} title="Close">
+            <svg width="12" height="12" viewBox="0 0 12 12"><path fill="none" stroke="currentColor" strokeWidth="1.2" d="M2.5 2.5l7 7M9.5 2.5l-7 7" /></svg>
+          </button>
+        </div>
+      </div>
+      <div className="app-body">
+        <Sidebar
+          currentRoute={route}
+          onNavigate={(r) => void actions.navigate(r)}
+          hasUpdate={hasUpdate}
+          latestVersion={update?.latestVersion ?? undefined}
+          theme={theme}
+          onToggleTheme={actions.toggleTheme}
+          onRestart={() => void actions.restart()}
+        />
+        <main className="workspace">
+          <header className="topbar" key={`topbar-${route}`}>
+            <div>
+              <h1>{routeTitle(route)}</h1>
+              <p>{routeSubtitle(route)}</p>
+            </div>
+            <div className="topbar-actions">
+              <Button onClick={actions.toggleTheme} size="icon" title={theme === "dark" ? "Switch to light" : "Switch to dark"} variant="outline">
+                {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              </Button>
+              <Button onClick={() => void actions.restart()} title="Restart Codex++" variant="outline">
+                <Rocket className="h-4 w-4" />
+                Restart Codex++
+              </Button>
+              <Button onClick={() => void actions.refreshCurrent()} size="icon" title="Refresh current page" variant="outline">
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </div>
+          </header>
+          <section className="screen" key={route}>
+            {route === "overview" && <OverviewTab overview={overview} pluginMarketplaceProgress={pluginMarketplaceProgress} ads={ads?.ads ?? []} actions={actions} launchForm={settingsForm} />}
+            {route === "relay" && <RelayTab settings={settings} relayFiles={relayFiles} envConflicts={envConflicts} ccsProviders={ccsProviders} form={settingsForm} onFormChange={setSettingsForm} actions={actions} />}
+            {route === "mobileControl" && <MobileControlTab form={settingsForm} onFormChange={setSettingsForm} actions={actions} />}
+            {route === "sessions" && <SessionsTab settings={settings} form={settingsForm} sessions={localSessions} providerSyncProgress={providerSyncProgress} providerSyncTargets={providerSyncTargets} selectedProviderSyncTarget={selectedProviderSyncTarget} onFormChange={setSettingsForm} actions={actions} />}
+            {route === "context" && <ContextTab form={settingsForm} liveContextEntries={liveContextEntries} relayFiles={relayFiles} onFormChange={setSettingsForm} actions={actions} />}
+            {route === "enhance" && <EnhanceTab form={settingsForm} pluginMarketplaceProgress={pluginMarketplaceProgress} onFormChange={setSettingsForm} actions={actions} />}
+            {route === "zedRemote" && <ZedRemoteTab zedRemoteProjects={zedRemoteProjects} form={settingsForm} onFormChange={setSettingsForm} actions={actions} />}
+            {route === "userScripts" && <UserScriptsTab settings={settings} market={scriptMarket} actions={actions} />}
+            {route === "recommendations" && <RecommendationsTab ads={ads} actions={actions} />}
+            {route === "maintenance" && <MaintenanceTab overview={overview} watcher={watcher} settings={settings} launchForm={launchForm} onLaunchFormChange={setLaunchForm} removeOwnedData={removeOwnedData} onRemoveOwnedDataChange={setRemoveOwnedData} actions={actions} />}
+            {route === "about" && <AboutTab overview={overview} update={update} logs={logs} diagnostics={diagnostics} actions={actions} />}
+            {route === "settings" && <SettingsTab settings={settings} theme={theme} form={settingsForm} onFormChange={setSettingsForm} actions={actions} />}
+          </section>
+        </main>
+      </div>
       {notice && (
         <NoticeDialog
           key={`${notice.title}-${notice.message}-${notice.status ?? ""}`}
