@@ -4,9 +4,6 @@
   <img src="docs/images/codex-plus-plus.png" alt="Codex++ icon" width="160">
 </p>
 
-<p align="center">
-  <a href="README_EN.md">Chinese</a> | English
-</p>
 
 <p align="center">
   <img alt="Release" src="https://img.shields.io/github/v/release/MeetSohailCodes/CodexPlusPlus">
@@ -33,7 +30,7 @@ After installation, two entry points are available:
 
 The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG installs `/Applications/Codex++.app` and `/Applications/Codex++ Manager.app`.
 
-## Sponsors
+## Providers
 
 <p align="center">
   <a href="https://jojocode.com/">
@@ -50,7 +47,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
 </p>
 <table>
   <tr>
-    <th width="180">🏆 Sponsor 🏆</th>
+    <th width="180">🏆 Provider 🏆</th>
     <th>Introduction</th>
   </tr>
   <tr>
@@ -59,7 +56,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
         <img src="docs/images/sponsor-jojocode.svg" alt="JOJO Code" height="80">
       </a>
     </td>
-    <td><a href="https://jojocode.com/"><strong>JOJO Code | Official Codex++ Relay</strong></a><br>Thanks to JOJO Code for sponsoring this project. JOJO Code is the official Codex++ relay service with cost-effective pricing and stable, easy-to-configure Codex API access. It supports GPT-5.5, GPT-5.4, Claude Opus 4.8, Claude Opus 4.7, gpt-image-2, and more for daily development, quick setup, team collaboration, and continuous use.</td>
+    <td><a href="https://jojocode.com/"><strong>JOJO Code | Official Codex++ Relay</strong></a><br>JOJO Code is the official Codex++ relay service with cost-effective pricing and stable, easy-to-configure Codex API access. It supports GPT-5.5, GPT-5.4, Claude Opus 4.8, Claude Opus 4.7, gpt-image-2, and more for daily development, quick setup, team collaboration, and continuous use.</td>
   </tr>
   <tr>
     <td align="center">
@@ -67,7 +64,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
         <img src="docs/images/sponsor-aigocode.png" alt="AIGoCode" height="80">
       </a>
     </td>
-    <td><a href="https://aigocode.com/invite/CodexPlusPlus"><strong>AIGoCode</strong></a><br>Thanks to AIGoCode for sponsoring this project! AIGoCode is an all-in-one platform integrating the latest Claude Code, Codex, and Gemini models, providing stable, efficient, and cost-effective AI programming services. It offers flexible subscription plans, direct access in China, no extra network setup, and fast responses. AIGoCode provides a special benefit for CodexPlusPlus users: users who <a href="https://aigocode.com/invite/CodexPlusPlus">register through this link</a> can receive an extra 10% bonus credit on their first recharge.</td>
+    <td><a href="https://aigocode.com/invite/CodexPlusPlus"><strong>AIGoCode</strong></a><br>AIGoCode is an all-in-one platform integrating the latest Claude Code, Codex, and Gemini models, providing stable, efficient, and cost-effective AI programming services. It offers flexible subscription plans, direct access in China, no extra network setup, and fast responses. AIGoCode provides a special benefit for CodexPlusPlus users: users who <a href="https://aigocode.com/invite/CodexPlusPlus">register through this link</a> can receive an extra 10% bonus credit on their first recharge.</td>
   </tr>
   <tr>
     <td align="center">
@@ -75,7 +72,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
         <img src="docs/images/sponsor-packycode.png" alt="PackyCode" height="80">
       </a>
     </td>
-    <td><a href="https://www.packyapi.com/"><strong>PackyCode</strong></a><br>Thanks to PackyCode for sponsoring this project! PackyCode is a stable and efficient API relay service provider, offering relay services for Claude Code, Codex, Gemini, and more. PackyCode provides a special discount for users of this software: register through this link and enter the "CodexPlusPlus" coupon code when recharging to get 10% off your first recharge.</td>
+    <td><a href="https://www.packyapi.com/"><strong>PackyCode</strong></a><br>PackyCode is a stable and efficient API relay service provider, offering relay services for Claude Code, Codex, Gemini, and more. PackyCode provides a special discount for users of this software: register through this link and enter the "CodexPlusPlus" coupon code when recharging to get 10% off your first recharge.</td>
   </tr>
   <tr>
     <td align="center">
@@ -83,7 +80,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
         <img src="docs/images/sponsor-apikey-fun.png" alt="APIKEY.FUN" height="80">
       </a>
     </td>
-    <td><a href="https://apikey.fun/register?aff=CODEX"><strong>APIKEY.FUN</strong></a><br>Thanks to APIKEY.FUN for sponsoring this project! APIKEY.FUN is an AI relay platform focused on open, stable, and cost-effective access to mainstream global models. It supports API relay services for Claude, OpenAI, Gemini, and other popular models, with prices as low as 7% of the official rate. Register through the dedicated link to receive up to a permanent 5% recharge discount.</td>
+    <td><a href="https://apikey.fun/register?aff=CODEX"><strong>APIKEY.FUN</strong></a><br>APIKEY.FUN is an AI relay platform focused on open, stable, and cost-effective access to mainstream global models. It supports API relay services for Claude, OpenAI, Gemini, and other popular models, with prices as low as 7% of the official rate. Register through the dedicated link to receive up to a permanent 5% recharge discount.</td>
   </tr>
   <tr>
     <td align="center">
@@ -91,7 +88,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
         <img src="docs/images/sponsor-runapi.png" alt="RunAPI" height="80">
       </a>
     </td>
-    <td><a href="https://runapi.co/register?aff=AWJq"><strong>RunAPI</strong></a><br>Thanks to RunAPI for sponsoring this project! RunAPI is an efficient and stable OpenRouter alternative API platform. One API key can access OpenAI, Claude, Gemini, DeepSeek, Grok, and 150+ mainstream models at prices as low as 10% of the original rate, with seamless compatibility for tools such as Claude Code and OpenClaw.</td>
+    <td><a href="https://runapi.co/register?aff=AWJq"><strong>RunAPI</strong></a><br>RunAPI is an efficient and stable OpenRouter alternative API platform. One API key can access OpenAI, Claude, Gemini, DeepSeek, Grok, and 150+ mainstream models at prices as low as 10% of the original rate, with seamless compatibility for tools such as Claude Code and OpenClaw.</td>
   </tr>
   <tr>
     <td align="center">
@@ -107,7 +104,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
         <img src="docs/images/sponsor-aihub2api.png" alt="AIHub2API" height="80">
       </a>
     </td>
-    <td><a href="https://aihub2api.cloud/register?promo=CODEXPLUSPLUS"><strong>AIHub2API</strong></a><br>Thanks to AIHub2API for sponsoring this project! AIHub2API is a stable and efficient API relay service provider specializing in Codex relay services, offering high cache hit rates and low multiplier relay services. With optimized network links, no extra network setup is needed, providing fast response times at prices as low as 1% of the official rate. Users who <a href="https://aihub2api.cloud/register?promo=CODEXPLUSPLUS">register through the dedicated link</a> will receive a $10 trial credit.</td>
+    <td><a href="https://aihub2api.cloud/register?promo=CODEXPLUSPLUS"><strong>AIHub2API</strong></a><br>AIHub2API is a stable and efficient API relay service provider specializing in Codex relay services, offering high cache hit rates and low multiplier relay services. With optimized network links, no extra network setup is needed, providing fast response times at prices as low as 1% of the official rate. Users who <a href="https://aihub2api.cloud/register?promo=CODEXPLUSPLUS">register through the dedicated link</a> will receive a $10 trial credit.</td>
   </tr>
   <tr>
     <td align="center">
@@ -115,7 +112,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
         <img src="docs/images/sponsor-ucloud-compshare.png" alt="Youyun Intelligent Computing" height="80">
       </a>
     </td>
-    <td><a href="https://www.compshare.cn/?ytag=GPU_YY_git_codex++"><strong>Youyun Intelligent Computing</strong></a><br>Thanks to Youyun Intelligent Computing for sponsoring this project! Youyun Intelligent Computing is a UCloud AI cloud platform offering monthly and pay-per-use cost-effective domestic model Agent Plans, starting from as low as 49 CNY/month. It also provides stable overseas model relay services, supporting access to Claude Code, Codex, and API calls, with enterprise-grade high concurrency, 24/7 technical support, and self-service invoicing. Users who register through this link will receive a free 5 CNY platform trial credit!</td>
+    <td><a href="https://www.compshare.cn/?ytag=GPU_YY_git_codex++"><strong>Youyun Intelligent Computing</strong></a><br>Youyun Intelligent Computing is a UCloud AI cloud platform offering monthly and pay-per-use cost-effective domestic model Agent Plans, starting from as low as 49 CNY/month. It also provides stable overseas model relay services, supporting access to Claude Code, Codex, and API calls, with enterprise-grade high concurrency, 24/7 technical support, and self-service invoicing. Users who register through this link will receive a free 5 CNY platform trial credit!</td>
   </tr>
   <tr>
     <td align="center">
@@ -123,7 +120,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
         <img src="docs/images/sponsor-cubence.png" alt="Cubence" height="80">
       </a>
     </td>
-    <td><a href="https://cubence.com?source=codexplusplus"><strong>Cubence</strong></a><br>Thanks to Cubence for sponsoring this project. Cubence is a stable and efficient API relay service provider. Since its launch in September 2025, it has provided support for Claude Code, Codex, Gemini, and many other models. Cubence offers a special discount code <code>CODEXPLUSPLUS</code> for users of this open source project, giving 12% off their first purchase!</td>
+    <td><a href="https://cubence.com?source=codexplusplus"><strong>Cubence</strong></a><br>Cubence is a stable and efficient API relay service provider. Since its launch in September 2025, it has provided support for Claude Code, Codex, Gemini, and many other models. Cubence offers a special discount code <code>CODEXPLUSPLUS</code> for users of this open source project, giving 12% off their first purchase!</td>
   </tr>
   <tr>
     <td align="center">
@@ -139,7 +136,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
         <img src="docs/images/sponsor-unity2.png" alt="Unity2.ai" height="80">
       </a>
     </td>
-    <td><a href="https://unity2.ai/register?source=codexplusplus"><strong>Unity2.ai</strong></a><br>Thanks to Unity2.ai for sponsoring this project! Unity2.ai is a high-performance AI model API relay platform for individual developers, teams, and enterprises. It has long served leading domestic enterprises, handling over 30 billion token calls daily with support for up to 5000 RPM high concurrency. It supports balance billing, first-recharge bonuses, combination subscriptions, enterprise invoicing, and dedicated support. Users who <a href="https://unity2.ai/register?source=codexplusplus">register through this link</a> can receive $2 in credits, and an additional $10 in credits by joining the official group, for a total of up to $12 in free credits.</td>
+    <td><a href="https://unity2.ai/register?source=codexplusplus"><strong>Unity2.ai</strong></a><br>Unity2.ai is a high-performance AI model API relay platform for individual developers, teams, and enterprises. It has long served leading domestic enterprises, handling over 30 billion token calls daily with support for up to 5000 RPM high concurrency. It supports balance billing, first-recharge bonuses, combination subscriptions, enterprise invoicing, and dedicated support. Users who <a href="https://unity2.ai/register?source=codexplusplus">register through this link</a> can receive $2 in credits, and an additional $10 in credits by joining the official group, for a total of up to $12 in free credits.</td>
   </tr>
   <tr>
     <td align="center">
@@ -147,7 +144,7 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
         <img src="docs/images/sponsor-icreat-api.jpg" alt="iCreat API" height="80">
       </a>
     </td>
-    <td><a href="https://api.icreat.ai"><strong>iCreat API</strong></a><br>Thanks to iCreat API for sponsoring this project! iCreat API is a high-performance AI model API relay platform for individual developers, teams, and enterprises. It provides stable access to official channels, covering whitelisted resources from Google, Volcano Engine, Kunlun Wanwei, Tencent Cloud, and more. The platform integrates major providers including Anthropic, ByteDance, OpenAI, DeepSeek, Google, Minimax, Kwai, and others, offering over 60 models through a unified console with multi-dimensional model filtering, billing type management, and group permission control. It supports pay-as-you-go and balance billing, with enterprise users eligible for invoicing and dedicated support services.</td>
+    <td><a href="https://api.icreat.ai"><strong>iCreat API</strong></a><br>iCreat API is a high-performance AI model API relay platform for individual developers, teams, and enterprises. It provides stable access to official channels, covering whitelisted resources from Google, Volcano Engine, Kunlun Wanwei, Tencent Cloud, and more. The platform integrates major providers including Anthropic, ByteDance, OpenAI, DeepSeek, Google, Minimax, Kwai, and others, offering over 60 models through a unified console with multi-dimensional model filtering, billing type management, and group permission control. It supports pay-as-you-go and balance billing, with enterprise users eligible for invoicing and dedicated support services.</td>
   </tr>
   <tr>
     <td align="center">
@@ -171,18 +168,9 @@ The Windows installer creates desktop and Start Menu shortcuts. The macOS DMG in
 
 Join the Codex++ discussion group (QQ Group: 830629290) to report issues, share usage experience, or suggest new features.
 
-WeChat Group: <a href="https://docs.qq.com/doc/DQ2VOanZTTFZJcUpZ#">Click here for the latest WeChat group QR code</a>.
-
-<img src="docs/images/discussion-group-qr.jpg" alt="Codex++ WeChat group QR code" width="260">
 
 Telegram Channel: <https://t.me/CodexPlusPlus>
 
-If Codex++ has helped you, you can buy me a coffee or send a small tip to support continued maintenance.
-
-<p align="center">
-  <img src="docs/images/sponsor-alipay.jpg" alt="Alipay sponsor QR code" width="220">
-  <img src="docs/images/sponsor-wechat.jpg" alt="WeChat sponsor QR code" width="220">
-</p>
 
 ## Highlights
 

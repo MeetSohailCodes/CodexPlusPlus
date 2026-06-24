@@ -1,0 +1,10 @@
+{
+  "name": "codex-plus-plus",
+  "version": "1.2.18",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "build": "node scripts/build.js",
+    "check": "cd apps/codex-plus-manager && tsc --noEmit -p tsconfig.json"
+  }
+}

@@ -31,4 +31,4 @@
 - Removed checksum blocking during script installation to prevent installation failures caused by inconsistent marketplace script checksums.
 - Cleaned up login, current vendor, and configuration file path information from the About page and Status page that didn't need to be displayed.
 - Adjusted prompt messages to be centered, preventing them from obscuring the restart button.
-- Updated discussion group QR code, README instructions, and macOS DMG packaging script.
+- Updated README instructions and macOS DMG packaging script.
