@@ -1,4 +1,6 @@
 use std::path::Path;
+
+#[cfg(not(windows))]
 use std::process::Command;
 
 use crate::zed_remote::SshTarget;

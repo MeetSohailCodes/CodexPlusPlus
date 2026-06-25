@@ -125,20 +125,20 @@ fn injection_script_times_out_backend_bridge_calls_and_falls_back_to_helper() {
 fn injection_script_explains_plugin_patch_is_unneeded_in_relay_mode() {
     let script = assets::injection_script(57321);
 
-    assert!(script.contains("Not needed in compatible enhancement mode"));
+    assert!(script.contains("Not needed in compatibility enhancement mode"));
 }
 
 #[test]
 fn injection_script_menu_exposes_three_independent_plugin_switches() {
     let script = assets::injection_script(57321);
 
-    assert!(script.contains("Plugin marketplace unlock"));
+    assert!(script.contains("Unlock plugin marketplace"));
     assert!(script.contains("data-codex-plus-setting=\"pluginMarketplaceUnlock\""));
     assert!(script.contains("Force unlock entry"));
     assert!(script.contains("data-codex-plus-setting=\"pluginEntryUnlock\""));
-    assert!(script.contains("Force install special plugins"));
+    assert!(script.contains("Force install plugins"));
     assert!(script.contains("data-codex-plus-setting=\"forcePluginInstall\""));
-    assert!(script.contains("Restore 1.1.9 entry unlock method"));
+    assert!(script.contains("Restores 1.1.9 entry unlock method"));
 }
 
 #[test]
@@ -347,7 +347,7 @@ fn injection_script_exposes_conversation_view_width_control() {
     assert!(script.contains("conversationView: false"));
     assert!(script.contains("conversationView"));
     assert!(script.contains("conversationViewMaxWidth"));
-    assert!(script.contains("Conversation center width"));
+    assert!(script.contains("Conversation centered width"));
     assert!(script.contains("data-codex-plus-conversation-view-width"));
     assert!(script.contains("conversationViewWidth()"));
     assert!(script.contains("normalizeConversationViewWidth"));
@@ -759,7 +759,7 @@ fn injection_script_prevents_switching_to_branches_used_by_other_worktrees() {
     assert!(script.contains("data-codex-branch-worktree-path"));
     assert!(script.contains("annotateBranchMenuWorktreeUsage"));
     assert!(script.contains("branchWorktreePathFromMenuItem"));
-    assert!(script.contains("This branch is already in use by another worktree"));
+    assert!(script.contains("This branch is already in use in another worktree"));
     assert!(script.contains("event.stopImmediatePropagation?.()"));
 }
 
@@ -781,13 +781,15 @@ fn manager_ui_exposes_pure_api_relay_mode_button() {
         .parent()
         .and_then(std::path::Path::parent)
         .expect("core crate should live under crates/codex-plus-core");
-    let source = std::fs::read_to_string(repo.join("apps/codex-plus-manager/src/App.tsx")).unwrap();
     let commands =
         std::fs::read_to_string(repo.join("apps/codex-plus-manager/src-tauri/src/lib.rs")).unwrap();
+    let actions =
+        std::fs::read_to_string(repo.join("apps/codex-plus-manager/src/hooks/useActions.ts")).unwrap();
+    let app = std::fs::read_to_string(repo.join("apps/codex-plus-manager/src/lib/relay.ts")).unwrap();
 
-    assert!(source.contains("Official mixed API Key"));
-    assert!(source.contains("Pure API"));
-    assert!(source.contains("apply_pure_api_injection"));
+    assert!(actions.contains("Official mixed API Key"));
+    assert!(actions.contains("Pure API mode"));
+    assert!(app.contains("apply_pure_api_injection"));
     assert!(commands.contains("commands::apply_pure_api_injection"));
 }
 

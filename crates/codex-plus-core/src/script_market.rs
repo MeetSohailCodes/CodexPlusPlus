@@ -5,7 +5,7 @@ use serde_json::Value;
 use crate::user_scripts::UserScriptManager;
 
 pub const DEFAULT_MARKET_INDEX_URL: &str =
-    "https://github.com/MeetSohailCodes/CodexPlusPlusScriptMarket/blob/master/index.json";
+    "https://raw.githubusercontent.com/MeetSohailCodes/CodexPlusPlusScriptMarket/master/index.json";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct ScriptMarketManifest {
@@ -57,7 +57,13 @@ pub fn parse_market_manifest(raw: Value) -> anyhow::Result<ScriptMarketManifest>
 }
 
 pub async fn fetch_market_manifest(url: &str) -> anyhow::Result<ScriptMarketManifest> {
-    let raw = reqwest::get(url)
+    let client = crate::http_client::proxied_client(&format!(
+        "Codex++/{}",
+        crate::version::VERSION
+    ))?;
+    let raw = client
+        .get(url)
+        .send()
         .await
         .with_context(|| format!("failed to request script market index {url}"))?
         .error_for_status()
@@ -69,7 +75,13 @@ pub async fn fetch_market_manifest(url: &str) -> anyhow::Result<ScriptMarketMani
 }
 
 pub async fn download_script(url: &str) -> anyhow::Result<Vec<u8>> {
-    Ok(reqwest::get(url)
+    let client = crate::http_client::proxied_client(&format!(
+        "Codex++/{}",
+        crate::version::VERSION
+    ))?;
+    Ok(client
+        .get(url)
+        .send()
         .await
         .with_context(|| format!("failed to request script {url}"))?
         .error_for_status()
