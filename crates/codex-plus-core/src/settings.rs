@@ -1542,11 +1542,56 @@ experimental_bearer_token = "sk-existing""#
             ..BackendSettings::default()
         };
 
+        let proxy_url = crate::protocol_proxy::local_responses_proxy_base_url(
+            crate::protocol_proxy::DEFAULT_PROTOCOL_PROXY_PORT,
+        );
+        let normalized = BackendSettings {
+            relay_profiles: vec![
+                RelayProfile {
+                    id: "relay-a".to_string(),
+                    name: "Relay A".to_string(),
+                    ..RelayProfile::default()
+                },
+                RelayProfile {
+                    id: "relay-b".to_string(),
+                    name: "Relay B".to_string(),
+                    ..RelayProfile::default()
+                },
+                RelayProfile {
+                    id: "agg".to_string(),
+                    name: "Aggregate".to_string(),
+                    relay_mode: RelayMode::Aggregate,
+                    base_url: proxy_url.clone(),
+                    upstream_base_url: proxy_url,
+                    api_key: "codex-plus-aggregate".to_string(),
+                    ..RelayProfile::default()
+                },
+            ],
+            active_relay_id: "agg".to_string(),
+            aggregate_relay_profiles: vec![AggregateRelayProfile {
+                id: "agg".to_string(),
+                name: "Aggregate".to_string(),
+                strategy: AggregateRelayStrategy::WeightedRoundRobin,
+                members: vec![
+                    AggregateRelayMember {
+                        relay_id: "relay-a".to_string(),
+                        weight: 1,
+                    },
+                    AggregateRelayMember {
+                        relay_id: "relay-b".to_string(),
+                        weight: 3,
+                    },
+                ],
+            }],
+            active_aggregate_relay_id: "agg".to_string(),
+            ..BackendSettings::default()
+        };
+
         store.save(&settings).unwrap();
 
         let loaded = store.load().unwrap();
         let active_aggregate = loaded.active_aggregate_relay_profile().unwrap();
-        assert_eq!(loaded, settings);
+        assert_eq!(loaded, normalized);
         assert_eq!(
             active_aggregate.strategy,
             AggregateRelayStrategy::WeightedRoundRobin
