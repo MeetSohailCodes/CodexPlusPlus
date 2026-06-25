@@ -1,6 +1,7 @@
 use serde::Serialize;
 use std::path::PathBuf;
 
+#[allow(dead_code)]
 const WINDOWS_USER_ENV_KEY: &str = "Environment";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -184,6 +185,7 @@ fn remove_user_env_value(_name: &str) -> anyhow::Result<bool> {
     Ok(false)
 }
 
+#[allow(dead_code)]
 trait Pipe: Sized {
     fn pipe<T>(self, f: impl FnOnce(Self) -> T) -> T {
         f(self)

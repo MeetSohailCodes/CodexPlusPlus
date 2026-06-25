@@ -38,7 +38,6 @@ pub fn run() {
                     .inner_size(1180.0, 820.0)
                     .min_inner_size(960.0, 720.0)
                     .decorations(false)
-                    .transparent(true)
                     .build()?;
             install_tray(app)?;
             register_main_window_events(main_window, app.handle().clone());

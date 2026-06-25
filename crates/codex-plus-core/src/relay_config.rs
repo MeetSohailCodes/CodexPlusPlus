@@ -1041,6 +1041,7 @@ fn write_codex_live_atomic(
     home: &Path,
     config_text: Option<&str>,
     auth_bytes: Option<&[u8]>,
+    #[allow(unused_variables)]
     preserve_computer_use_guard: bool,
 ) -> anyhow::Result<Option<String>> {
     std::fs::create_dir_all(home)?;
